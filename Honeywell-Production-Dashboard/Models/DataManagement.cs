@@ -73,7 +73,8 @@ namespace Honeywell_Production_Dashboard.Models
                 }
 
             }
-            catch (Exception ex) { 
+            catch (Exception ex) {
+                return FgName;
             }
             return FgName;
         }
