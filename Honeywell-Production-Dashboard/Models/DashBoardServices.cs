@@ -40,5 +40,11 @@ namespace Honeywell_Production_Dashboard.Models
             var resulthourly=dataManagement.getHourlyOP(dashboard_HourlyOP);
             return resulthourly;
         }
+
+        public loginmodel logindetails(loginmodel loginmodel)
+        {
+            var resultlogin= dataManagement.logindetails(loginmodel);
+            return resultlogin;
+        }
     }
 }

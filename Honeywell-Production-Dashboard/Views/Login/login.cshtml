@@ -40,7 +40,9 @@
 
     <div class="login-box">
         <h3 class="text-center mb-4">Honeywell</h3>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <form method="post" action="/login">
+          
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="employeeid" class="form-label">Employee ID</label>
@@ -72,3 +74,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

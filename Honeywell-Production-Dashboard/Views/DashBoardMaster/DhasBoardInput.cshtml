@@ -1,11 +1,197 @@
-﻿
+﻿@model CustomerMasterModel
 @{
-    ViewData["Title"] = "DhasBoardInput";
+
 }
+<h2>DashBoard</h2>
+<canvas id="lineChart" width="800" height="400"></canvas>
 
-<div class="container">
-    <div class="row">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    </div>
-</div>
+<script>
+    //       $(document).ready(function () {
+    //     debugger;
+    //     var fgname = '@Model.FGName';
+    //     var type = '@Model.Type';
+
+    //     $.ajax({
+    //         url: '/DashBoardMaster/GetChartData',
+    //         type: 'GET',
+    //         data: { Fgname: fgname, Type: type },
+    //         success: function (data) {
+    //             debugger;
+    //             const labels = [...new Set(data.map(item => item.hourIntervel))];
+    //             const testTypes = [...new Set(data.map(item => item.testType))];
+
+    //             const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+    //             const datasets = testTypes.map(testType => {
+    //                 const dataPoints = labels.map(label => {
+    //                     const match = data.find(x => x.testType === testType && x.hourIntervel === label);
+    //                     return match ? match.logCount : 0;
+    //                 });
+
+    //                 return {
+    //                     label: testType,
+    //                     data: dataPoints,
+    //                     backgroundColor: labels.map(() => generateColor()), // Colorful bars
+    //                     borderWidth: 1
+    //                 };
+    //             });
+
+    //             const ctx = document.getElementById('lineChart').getContext('2d');
+    //             new Chart(ctx, {
+    //                 type: 'bar',
+    //                 data: {
+    //                     labels: labels,
+    //                     datasets: datasets
+    //                 },
+    //                 options: {
+    //                     responsive: true,
+    //                     plugins: {
+    //                         title: {
+    //                             display: true,
+    //                             text: 'Log Count by Hour Interval and Test Type'
+    //                         },
+    //                         tooltip: {
+    //                             enabled: true,
+    //                             mode: 'index',
+    //                             intersect: false,
+    //                             callbacks: {
+    //                                 label: function (context) {
+    //                                     return `${context.dataset.label}: ${context.formattedValue}`;
+    //                                 }
+    //                             }
+    //                         },
+    //                         legend: {
+    //                             position: 'top'
+    //                         }
+    //                     },
+    //                     interaction: {
+    //                         mode: 'nearest',
+    //                         axis: 'x',
+    //                         intersect: false
+    //                     },
+    //                     scales: {
+    //                         x: {
+    //                             stacked: false
+    //                         },
+    //                         y: {
+    //                             beginAtZero: true
+    //                         }
+    //                     }
+    //                 }
+    //             });
+    //         },
+    //         error: function (err) {
+    //             console.error("Error loading chart data", err);
+    //         }
+    //     });
+    // });
+        $(document).ready(function () {
+        var fgname = '@Model.FGName';
+        var type = '@Model.Type';
+
+        $.ajax({
+            url: '/DashBoardMaster/GetChartData',
+            type: 'GET',
+            data: { Fgname: fgname, Type: type },
+            success: function (data) {
+                const labels = [...new Set(data.map(item => item.hourIntervel))];
+                const testTypes = [...new Set(data.map(item => item.testType))];
+
+                const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+                const datasets = testTypes.map(testType => {
+                    const dataPoints = labels.map(label => {
+                        const match = data.find(x => x.testType === testType && x.hourIntervel === label);
+                        return match ? match.logCount : 0;
+                    });
+
+                    return {
+                        label: testType,
+                        data: dataPoints,
+                        backgroundColor: labels.map(() => generateColor()),
+                        borderWidth: 1
+                    };
+                });
+
+                const ctx = document.getElementById('lineChart').getContext('2d');
+
+                const chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Log Count by Hour Interval and Test Type'
+                            },
+                            tooltip: {
+                                enabled: true
+                            },
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
+                        },
+                        scales: {
+                            x: { stacked: false },
+                            y: { beginAtZero: true }
+                        },
+                        animation: {
+                            onComplete: () => {
+                                // Auto-cycle tooltips
+                                let datasetIndex = 0;
+                                let dataIndex = 0;
+
+                                setInterval(() => {
+                                    const meta = chart.getDatasetMeta(datasetIndex);
+                                    if (!meta || !meta.data || meta.data.length === 0) return;
+
+                                    const point = meta.data[dataIndex];
+                                    if (!point) return;
+
+                                    chart.tooltip.setActiveElements([{
+                                        datasetIndex,
+                                        index: dataIndex
+                                    }], {
+                                        x: point.x,
+                                        y: point.y
+                                    });
+                                    chart.update();
+
+                                    dataIndex++;
+                                    if (dataIndex >= meta.data.length) {
+                                        dataIndex = 0;
+                                        datasetIndex++;
+                                        if (datasetIndex >= chart.data.datasets.length) {
+                                            datasetIndex = 0;
+                                        }
+                                    }
+                                }, 5000); // Change every 5 seconds
+                            }
+                        }
+                    }
+                });
+            },
+            error: function (err) {
+                console.error("Error loading chart data", err);
+            }
+        });
+    });
+
+
+</script>
+
 

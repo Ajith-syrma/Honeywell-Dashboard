@@ -6,6 +6,7 @@ namespace Honeywell_Production_Dashboard.Models
     {
         public string Customer { get; set; }
         public string FGName { get; set; }
+        public string FGNameText {  get; set; }
         public int Manpower { get; set; }
         public string Type {  get; set; }
 

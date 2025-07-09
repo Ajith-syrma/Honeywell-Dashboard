@@ -160,9 +160,12 @@ namespace Honeywell_Production_Dashboard.Models
                     {
                         sqlcmdhourly.CommandType = CommandType.StoredProcedure;
                         sqlcmdhourly.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
-                        sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
-                        sqlcmdhourly.Parameters.AddWithValue("@date", date);
-                        sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
+                        // sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
+                        sqlcmdhourly.Parameters.AddWithValue("@fg", "ECH1HML00002");
+                        //sqlcmdhourly.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        sqlcmdhourly.Parameters.AddWithValue("@date", "29-11-2024");
+                        // sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
+                        sqlcmdhourly.Parameters.AddWithValue("@shift", "SHIFT-B");
                         SqlDataAdapter dahourly=new SqlDataAdapter (sqlcmdhourly);
                         DataTable dthourly = new DataTable();
                         dahourly.Fill(dthourly);
@@ -187,23 +190,55 @@ namespace Honeywell_Production_Dashboard.Models
             return lstDashboard;
         }
 
+        public loginmodel logindetails(loginmodel loginmodel)
+        {
+            var logindetails = new loginmodel();
+            try
+            {
+                using (SqlConnection sqllogin = new SqlConnection(ConnectionString))
+                {
+                    using (SqlCommand sqlcmdlogin = new SqlCommand("pro_login", sqllogin))
+                    {
+                        sqlcmdlogin.CommandType = CommandType.StoredProcedure;
+                        sqlcmdlogin.Parameters.AddWithValue("@emloyeeid", loginmodel.employeeid);
+                        sqlcmdlogin.Parameters.AddWithValue("@password", loginmodel.password);
+                        SqlDataAdapter da = new SqlDataAdapter(sqlcmdlogin);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        if (dt.Rows.Count > 0)
+                        {
+                            logindetails.employeeid = dt.Rows[0][0].ToString();
+                            logindetails.password = dt.Rows[0][1].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return logindetails;
+            }
+
+            return logindetails;
+        }
+
         string GetShiftLabel(DateTime time)
         {
             TimeSpan t = time.TimeOfDay;
 
             if (t >= TimeSpan.FromHours(8) && t < TimeSpan.FromHours(16))
             {
-                return "A"; // 8:00 AM - 3:59 PM
+                return "SHIFT-A"; // 8:00 AM - 3:59 PM
             }
             else if (t >= TimeSpan.FromHours(16) && t < TimeSpan.FromHours(24))
             {
-                return "B"; // 4:00 PM - 11:59 PM
+                return "SHIFT-B"; // 4:00 PM - 11:59 PM
             }
             else
             {
-                return "C"; // 12:00 AM - 7:59 AM
+                return "SHIFT-C"; // 12:00 AM - 7:59 AM
             }
         }
 
     }
 }
+

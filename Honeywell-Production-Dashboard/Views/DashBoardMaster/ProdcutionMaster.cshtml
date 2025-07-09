@@ -35,18 +35,20 @@
                             </select> *@
                             @Html.DropDownListFor(a => a.Customer, Model.Customers, new { @id = "ddlcustomers", @class = "form-control" })
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Type</label>
-                            <select asp-for="Type" class="form-select" >
-                                <option value="0">-- Select Type --</option>
-                                <option>V200</option>
-                                <option>Q600</option>
-                               
-                            </select>
-                        </div>
+                       
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">FG Name :</label>
                             <select id="ddlFgName" asp-for="FGName" class="form-control">
+                            </select>
+                            <input type="hidden" asp-for="FGNameText" id="FGNameText" name="FGNameText" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Type</label>
+                            <select asp-for="Type" class="form-select">
+                                <option value="0">-- Select Type --</option>
+                                <option>V200</option>
+                                <option>Q600</option>
+
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -124,10 +126,14 @@
     $(document).ready({
 
     });
+      $('#ddlFgName').on('change', function () {
+        var selectedText = $('#ddlFgName option:selected').text();
+        $('#FGNameText').val(selectedText); // Store text in hidden input
+    });
     $('#ddlcustomers').on('change',function(){
         debugger;
         var Cusid=$('#ddlcustomers').val();
-        alert(Cusid);
+      //  alert(Cusid);
         $.ajax({
             url:'/DashBoardMaster/getFGNameList',
             type:'Get',
@@ -153,12 +159,8 @@
 </script>
 
 <style>
-    .btn {
-        height: 2em;
-        font-family: serif;
-    }
-
-    thead th {
+ 
+    thead tr th {
         position: sticky;
         top: 0;
         background: #f8f9fa;
