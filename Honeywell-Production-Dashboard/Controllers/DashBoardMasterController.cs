@@ -17,6 +17,7 @@ namespace Honeywell_Production_Dashboard.Controllers
             CustomerMasterModel customerMasterModel = new CustomerMasterModel();
             customerMasterModel.Customers = interface_DashBoard.getCustomerName();
             var getProdcutiondettails = interface_DashBoard.getCustomerMasterModels();
+          //  var getdowntime = interface_DashBoard.getdowntime();    
             customerMasterModel.inputDetails = getProdcutiondettails;
             return View(customerMasterModel);
         }

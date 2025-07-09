@@ -187,6 +187,34 @@ namespace Honeywell_Production_Dashboard.Models
             return lstDashboard;
         }
 
+
+        public int getdowntime(CustomerMasterModel customermodel)
+        {
+            int manpowerResult = 0;
+            try
+            {
+                using (SqlConnection sqlinsert = new SqlConnection(ConnectionString))
+                {
+                    using (SqlCommand cmdinsert = new SqlCommand("InsertTargetop", sqlinsert))
+                    {
+                        cmdinsert.CommandType = CommandType.StoredProcedure;
+                        cmdinsert.Parameters.AddWithValue("@Op_count", customermodel.Manpower);
+                        cmdinsert.Parameters.AddWithValue("@Fg_Id", customermodel.FGName);
+                        sqlinsert.Open();
+                        manpowerResult = cmdinsert.ExecuteNonQuery();
+                        sqlinsert.Close();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return manpowerResult;
+            }
+            return manpowerResult;
+        }
+
         string GetShiftLabel(DateTime time)
         {
             TimeSpan t = time.TimeOfDay;
