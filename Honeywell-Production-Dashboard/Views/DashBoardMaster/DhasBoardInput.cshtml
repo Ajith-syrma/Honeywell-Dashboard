@@ -81,7 +81,7 @@
     .chart-card:hover {
         transform: scale(1.005);
     }
-
+ */
     canvas {
         width: 100% !important;
         height: 300px !important; /* Fixed height */
@@ -181,6 +181,12 @@
         const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
         const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
 
+        if (!fgname || !type || fgname.trim() === "" || type.trim() === "") {
+            alert("Please select both FG Name and Type before viewing the chart.");
+            window.location.href = "/DashBoardMaster/ProdcutionMaster"; 
+            return;
+        }
+
         const toggle = document.getElementById('darkModeToggle');
         const currentMode = localStorage.getItem('theme');
 
@@ -201,6 +207,8 @@
 
         const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
 
+
+
         // Show all spinners initially
         $('#spinnerLabLos, #spinnerLineUtil, #spinnerYield, #spinnerStage, #spinnerPie').show();
 
@@ -212,13 +220,14 @@
             const labels = data.map(d => d.hourIntervel);
             const values = data.map(d => d.labr_loss);
             const bg = labels.map(() => generateColor());
-
+            console.log(data);
             const ctx = document.getElementById('labLosChart').getContext('2d');
             if (window.labLosChartInstance) window.labLosChartInstance.destroy();
 
             window.labLosChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
+                   
                     labels,
                     datasets: [{
                         label: 'Labor Loss (%)',
@@ -229,7 +238,6 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
                         title: { display: true, text: 'Lab LOS by Hour Interval' },
                         legend: { display: false },
@@ -272,7 +280,6 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
                         title: { display: true, text: 'Line Utilization by Hour Interval' },
                         legend: { display: false },
@@ -316,7 +323,6 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
                         title: { display: true, text: 'Yield by Stage' },
                         legend: { display: false },
@@ -357,7 +363,6 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
                         title: { display: true, text: 'Plan vs Actual by Hour Interval' },
                         legend: { display: true }
