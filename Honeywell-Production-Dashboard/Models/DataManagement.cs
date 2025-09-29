@@ -171,13 +171,13 @@ namespace Honeywell_Production_Dashboard.Models
                     using (SqlCommand sqlcmdhourly = new SqlCommand("DIGI_DASHBOARD_HOURLY_OP_by_stage", sqlhorly))
                     {
                         sqlcmdhourly.CommandType = CommandType.StoredProcedure;
-                       // sqlcmdhourly.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
-                        sqlcmdhourly.Parameters.AddWithValue("@Type", "Q600");
-                        // sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
-                        sqlcmdhourly.Parameters.AddWithValue("@fg", "ECH1HML00002");
-                        //sqlcmdhourly.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
-                        sqlcmdhourly.Parameters.AddWithValue("@date", "24-08-2024");
-                        // sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
+                       //sqlcmdhourly.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
+                        sqlcmdhourly.Parameters.AddWithValue("@Type", "V200");
+                       // sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
+                        sqlcmdhourly.Parameters.AddWithValue("@fg", "ECH3HWI00001");
+                       // sqlcmdhourly.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        sqlcmdhourly.Parameters.AddWithValue("@date", "25-09-2025");
+                       // sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
                         sqlcmdhourly.Parameters.AddWithValue("@shift", "SHIFT-A");
                         SqlDataAdapter dahourly = new SqlDataAdapter(sqlcmdhourly);
                         DataTable dthourly = new DataTable();
@@ -220,14 +220,14 @@ namespace Honeywell_Production_Dashboard.Models
                     using (SqlCommand sqlcmdyield = new SqlCommand("DIGI_DASHBOARD_YIELDBYSTAGE", sqlhorly))
                     {
                         sqlcmdyield.CommandType = CommandType.StoredProcedure;
-                        // sqlcmdhourly.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
+                       // sqlcmdyield.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
                         sqlcmdyield.Parameters.AddWithValue("@Type", "V200");
-                        // sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
+                       // sqlcmdyield.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
                         sqlcmdyield.Parameters.AddWithValue("@fg", "ECH3HWI00001");
-                        //sqlcmdhourly.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
-                        sqlcmdyield.Parameters.AddWithValue("@date", "01-02-2025");
-                        // sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
-                        sqlcmdyield.Parameters.AddWithValue("@shift", "SHIFT-B");
+                      //  sqlcmdyield.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        sqlcmdyield.Parameters.AddWithValue("@date", "25-09-2025");
+                      //  sqlcmdyield.Parameters.AddWithValue("@shift", shift);
+                        sqlcmdyield.Parameters.AddWithValue("@shift", "SHIFT-A");
                         SqlDataAdapter dyhourly = new SqlDataAdapter(sqlcmdyield);
                         DataTable dtyhourly = new DataTable();
                         dyhourly.Fill(dtyhourly);
@@ -269,13 +269,13 @@ namespace Honeywell_Production_Dashboard.Models
                     using (SqlCommand sqlcmdutil = new SqlCommand("DIGI_DASHBOARD_LINEUTILIAZTIONBYSTAGE", sqlhorly))
                     {
                         sqlcmdutil.CommandType = CommandType.StoredProcedure;
-                        // sqlcmdhourly.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
-                        sqlcmdutil.Parameters.AddWithValue("@Type", "Q600");
-                        // sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
-                        sqlcmdutil.Parameters.AddWithValue("@fg", "ECH1HML00002");
-                        //sqlcmdhourly.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
-                        sqlcmdutil.Parameters.AddWithValue("@date", "24-08-2024");
-                        // sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
+                        //sqlcmdutil.Parameters.AddWithValue("@Type", dashboard_lineutildata_OP.TestType);
+                        sqlcmdutil.Parameters.AddWithValue("@Type", "V200");
+                       // sqlcmdutil.Parameters.AddWithValue("@fg",dashboard_lineutildata_OP.FGName);
+                        sqlcmdutil.Parameters.AddWithValue("@fg", "ECH3HWI00001");
+                       // sqlcmdutil.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        sqlcmdutil.Parameters.AddWithValue("@date", "25-09-2025");
+                       // sqlcmdutil.Parameters.AddWithValue("@shift", shift);
                         sqlcmdutil.Parameters.AddWithValue("@shift", "SHIFT-A");
                         SqlDataAdapter dyhourly = new SqlDataAdapter(sqlcmdutil);
                         DataTable dtyhourly = new DataTable();
@@ -286,7 +286,7 @@ namespace Honeywell_Production_Dashboard.Models
                             {
                                 objDashboard2 = new Lineutilization();
                                // objDashboard2.stage = dr["STAGE"].ToString();
-                                objDashboard2.HourIntervel = dr["HOURINTERVAL"].ToString();
+                                objDashboard2.HourIntervel = dr["ACTUALHOUR"].ToString();
                                 objDashboard2.planned_qty = Convert.ToInt32(dr["planned_qty"].ToString());
                                 objDashboard2.Produced_qty = Convert.ToInt32(dr["Produced_qty"].ToString());
                                 lstutildataDashboard.Add(objDashboard2);
@@ -318,13 +318,14 @@ namespace Honeywell_Production_Dashboard.Models
                     using (SqlCommand sqlcmdlabr = new SqlCommand("DIGI_DASHBOARD_LABLOSSPERCENTAGE", sqlhorly))
                     {
                         sqlcmdlabr.CommandType = CommandType.StoredProcedure;
-                        // sqlcmdhourly.Parameters.AddWithValue("@Type", dashboard_HourlyOP.TestType);
-                        sqlcmdlabr.Parameters.AddWithValue("@Type", "Q600");
-                        // sqlcmdhourly.Parameters.AddWithValue("@fg",dashboard_HourlyOP.FGName);
-                        sqlcmdlabr.Parameters.AddWithValue("@fg", "ECH1HML00002");
-                        //sqlcmdhourly.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
-                        sqlcmdlabr.Parameters.AddWithValue("@date", "24-08-2024");
-                        // sqlcmdhourly.Parameters.AddWithValue("@shift", shift);
+                       // sqlcmdlabr.Parameters.AddWithValue("@Type", dashboard_lablossper_OP.TestType);
+                        sqlcmdlabr.Parameters.AddWithValue("@Type", "V200");
+                        //sqlcmdlabr.Parameters.AddWithValue("@fg",dashboard_lablossper_OP.FGName);
+                        sqlcmdlabr.Parameters.AddWithValue("@fg", "ECH3HWI00001");
+                        //sqlcmdlabr.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        string val = date.ToString("dd-MM-yyyy");
+                        sqlcmdlabr.Parameters.AddWithValue("@date", "25-09-2025");
+                        //sqlcmdlabr.Parameters.AddWithValue("@shift", shift);
                         sqlcmdlabr.Parameters.AddWithValue("@shift", "SHIFT-A");
                         SqlDataAdapter dyhourly = new SqlDataAdapter(sqlcmdlabr);
                         DataTable dtyhourly = new DataTable();
@@ -335,7 +336,7 @@ namespace Honeywell_Production_Dashboard.Models
                             {
                                 objDashboard3 = new labrlosspercentage();
                                 // objDashboard2.stage = dr["STAGE"].ToString();
-                                objDashboard3.HourIntervel = dr["HOURINTERVAL"].ToString();
+                                objDashboard3.HourIntervel = dr["ACTUALHOUR"].ToString();
                                 objDashboard3.Actual_work_hrs = Convert.ToInt32(dr["Actualworkedhours"].ToString());
                                 objDashboard3.Produced_qty = Convert.ToInt32(dr["Produced_qty"].ToString());
                                 lstlabrDashboard.Add(objDashboard3);
@@ -374,6 +375,7 @@ namespace Honeywell_Production_Dashboard.Models
                         {
                             logindetails.employeeid = dt.Rows[0][0].ToString();
                             logindetails.password = dt.Rows[0][1].ToString();
+                            logindetails.usertype = dt.Rows[0][2].ToString();
                         }
                     }
                 }
@@ -418,14 +420,18 @@ namespace Honeywell_Production_Dashboard.Models
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                       // cmd.Parameters.AddWithValue("@input", "idletime");
+
                         cmd.Parameters.AddWithValue("@Type", "V200");
                         cmd.Parameters.AddWithValue("@fg", "ECH3HWI00001");
-                        //cmd.Parameters.AddWithValue("@type", oeedowntime.TestType);
-                        //cmd.Parameters.AddWithValue("@type", oeedowntime.TestType);
-                        // cmd.Parameters.AddWithValue("@fg", oeedowntime.FGName);
-                        cmd.Parameters.AddWithValue("@date", "2025-08-08");
+                        cmd.Parameters.AddWithValue("@date", "25-09-2025");
                         cmd.Parameters.AddWithValue("@shift", "SHIFT-A");
+
+
+
+                        cmd.Parameters.AddWithValue("@Type", type);
+                        cmd.Parameters.AddWithValue("@fg", fg);
+                        cmd.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@shift", shift);
 
                         sqlConnection.Open();
                         var response = cmd.ExecuteScalar();
@@ -462,13 +468,16 @@ namespace Honeywell_Production_Dashboard.Models
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         cmd.Parameters.AddWithValue("@input", "idletime");
+
+
                         cmd.Parameters.AddWithValue("@type", "V200");
                         cmd.Parameters.AddWithValue("@fg", "ECH3HWI00001");
+                        cmd.Parameters.AddWithValue("@date", "25-09-2025");
+                        cmd.Parameters.AddWithValue("@shift", "SHIFT-A");
                         //cmd.Parameters.AddWithValue("@type", oeedowntime.TestType);
-                        //cmd.Parameters.AddWithValue("@type", oeedowntime.TestType);
-                        // cmd.Parameters.AddWithValue("@fg", oeedowntime.FGName);
-                        cmd.Parameters.AddWithValue("@date", "01-02-2025");
-                        cmd.Parameters.AddWithValue("@shift", "SHIFT-B");
+                        //cmd.Parameters.AddWithValue("@fg", oeedowntime.FGName);
+                        //cmd.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        //cmd.Parameters.AddWithValue("@shift", shift);
 
                         sqlConnection.Open();
                         var response = cmd.ExecuteScalar();
@@ -477,6 +486,7 @@ namespace Honeywell_Production_Dashboard.Models
                         if (response != null && int.TryParse(response.ToString(), out int output))
                         {
                             result = output;
+
                         }
                     }
                 }
@@ -506,14 +516,18 @@ namespace Honeywell_Production_Dashboard.Models
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                     //   cmd.Parameters.AddWithValue("@input", "idletime");
+
+
                         cmd.Parameters.AddWithValue("@type", "V200");
                         cmd.Parameters.AddWithValue("@fg", "ECH3HWI00001");
-                        
-                       // cmd.Parameters.AddWithValue("@type", dashboard_HourlyOP.TestType);
-                      //  cmd.Parameters.AddWithValue("@fg", dashboard_HourlyOP.FGName);
-                        cmd.Parameters.AddWithValue("@date", "01-02-2025");
-                        cmd.Parameters.AddWithValue("@shift", "SHIFT-B");
+                        cmd.Parameters.AddWithValue("@date", "25-09-2025");
+                        cmd.Parameters.AddWithValue("@shift", "SHIFT-A");
+
+
+                        //cmd.Parameters.AddWithValue("@type", dashboard_HourlyOP.TestType);            
+                        //cmd.Parameters.AddWithValue("@fg", dashboard_HourlyOP.FGName);
+                        //cmd.Parameters.AddWithValue("@date", date.ToString("dd-MM-yyyy"));
+                        //cmd.Parameters.AddWithValue("@shift", shift);
 
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
                         DataTable dt = new DataTable();

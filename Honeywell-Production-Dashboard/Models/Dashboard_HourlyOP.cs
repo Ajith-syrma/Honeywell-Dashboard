@@ -55,5 +55,14 @@
 
     }
 
+    public class downtimecal
+    {
+
+        public int hour_count { get; set; }
+        public int downtime { get; set; }
+
+
+    }
+
 
 }

@@ -94,10 +94,13 @@ namespace Honeywell_Production_Dashboard.Models
             string fg = dashboard_lablossper_OP.FGName;
             string type = dashboard_lablossper_OP.TestType;
             var manpower = dataManagement.getmanpowerdata(fg, type);
+            manpower = 2;
 
             foreach (var value in resultlablosdata)
             {
-                var actualworkdhrs = ((decimal)value.Actual_work_hrs)/60;
+
+                var actualworkdhrs1 = ((decimal)value.Actual_work_hrs - 60);
+                var actualworkdhrs = actualworkdhrs1 / 60;
                 var Produced_qty = value.Produced_qty;
                 var presenthrs = manpower* (actualworkdhrs) ;
                 var gd_hrs = 1.347 * (Produced_qty);
@@ -108,6 +111,7 @@ namespace Honeywell_Production_Dashboard.Models
                 if (actualworkdhrs > 0 && Produced_qty > 0)
                 {
                     lab_los = ((decimal)(val1) / (decimal)gd_hrs) * 100;
+                    lab_los = lab_los+(decimal)(100);
                 }
 
                 value.labr_loss = lab_los; //  Store the result directly in the object
@@ -128,11 +132,64 @@ namespace Honeywell_Production_Dashboard.Models
 
             // 1. Availability
             int downtime_seconds = dataManagement.getdowntime(dashboard_HourlyOP);
+            var date = DateTime.Now.TimeOfDay;
+
             int downtime = downtime_seconds - 2400;
+
+            //int runtimeValue = 26400 - downtime_seconds;
+
+            // Get current hour
+            DateTime now = DateTime.Now;
+
+            // 2. Format current time like "25-09-2025 08:12:23"
+            string currentFormatted = now.ToString("dd-MM-yyyy HH:mm:ss");
+            Console.WriteLine($"Current Time: {currentFormatted}");
+
+            // 3. Determine shift start time
+            DateTime shiftStart;
+
+            TimeSpan currentTime = now.TimeOfDay;
+
+            if (currentTime >= TimeSpan.FromHours(8) && currentTime < TimeSpan.FromHours(16))
+            {
+                // Shift A
+                shiftStart = new DateTime(now.Year, now.Month, now.Day, 8, 0, 0);
+            }
+            else if (currentTime >= TimeSpan.FromHours(16) && currentTime < TimeSpan.FromHours(24))
+            {
+                // Shift B
+                shiftStart = new DateTime(now.Year, now.Month, now.Day, 16, 0, 0);
+            }
+            else
+            {
+                // Shift C (between 00:00 and 08:00)
+                // If before 08:00, shift started today at 00:00
+                shiftStart = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+            }
+
+            // 4. Format shift start time
+            string shiftFormatted = shiftStart.ToString("dd-MM-yyyy HH:mm:ss");
+            Console.WriteLine($"Shift Start Time: {shiftFormatted}");
+
+            // 5. Calculate the difference
+            TimeSpan difference = now - shiftStart;
+            Console.WriteLine($"Time since shift started: {difference.Hours} hours, {difference.Minutes} minutes, {difference.Seconds} seconds");
+
+
+            int minutesSinceShiftStart = (int)difference.TotalMinutes;
+            // Get planned production time for current hour
+
+            // int planned_production_time = minutesSinceShiftStart*60;
+            int planned_production_time = 26400 ;
+
+            // Calculate runtime
             int runtimeValue = 26400 - downtime_seconds;
 
+           // Output
+
+
             decimal availability = (runtimeValue > 0)
-                ? ((decimal)runtimeValue / 26400) * 100
+                ? ((decimal)runtimeValue / planned_production_time) * 100
                 : 0;
 
             // 2. Get Performance Metrics
@@ -154,10 +211,12 @@ namespace Honeywell_Production_Dashboard.Models
                 : 0;
 
             // 4. Performance
-            decimal idealCycleTime = dataManagement.getidealcycletime(dashboard_HourlyOP); // in seconds
+            // decimal idealCycleTime = dataManagement.getidealcycletime(dashboard_HourlyOP); // in seconds
+            decimal idealCycleTime = (decimal)200.00;
             decimal performance = (totalCount > 0 && runtimeValue > 0)
                 ? ((decimal)totalCount * idealCycleTime / runtimeValue) * 100
                 : 0;
+
 
             // 5. Add to result list
             oeeResults.Add(new Dashboard_HourlyOP { Label = "Availability", Value = Math.Round(availability, 2) });

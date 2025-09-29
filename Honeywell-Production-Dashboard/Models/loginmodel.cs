@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Honeywell_Production_Dashboard.Models
 {
@@ -9,5 +11,12 @@ namespace Honeywell_Production_Dashboard.Models
 
         [Required]
         public string password { get; set; }
+
+
+        [BindNever]
+        [ValidateNever]
+        public string usertype { get; set; }  // Make sure this exists and is public
+
+
     }
 }

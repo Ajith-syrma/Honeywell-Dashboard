@@ -10,15 +10,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="~/css/dashboard.css" />
 
-
 <style>
+    /* Header Layout */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 0 10px;
+    }
+
+    .header-left,
+    .header-center,
+    .header-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-left {
+        justify-content: flex-start;
+    }
+
+    .header-center {
+        justify-content: center;
+    }
+
+    .header-right {
+        justify-content: flex-end;
+        font-size: 15px;
+        color: #444;
+        font-weight: 500;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .header-logo {
+        height: 60px;
+        width: auto;
+        margin-right: 10px;
+    }
+
+    /* Theme Variables */
     :root {
         --bg-light: #f4f7fa;
-        --bg-dark: #1e1e1e;
         --card-light: #ffffff;
-        --card-dark: #2c2c2c;
         --text-light: #333;
-        --text-dark: #f4f4f4;
     }
 
     body {
@@ -30,63 +66,46 @@
         transition: background-color 0.3s, color 0.3s;
     }
 
-    body.dark-mode {
-        background-color: var(--bg-dark);
-        color: var(--text-dark);
-    }
-
     h2 {
-        text-align: center;
-        margin-bottom: 30px;
+        margin: 0;
         font-size: 32px;
-    }
-
-    .toggle-container {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .toggle-switch {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 16px;
-    }
-
-    .toggle-switch input {
-        transform: scale(1.2);
+        font-weight: 600;
+        color: #222;
     }
 
     .dashboard-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-        gap: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .chart-row {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     .chart-card {
-        background-color: var(--card-light);
-        color: inherit;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        padding: 20px;
-        border-radius: 10px;
-        position: relative;
-        height: 350px;
-        transition: background-color 0.3s;
+        flex: 1 1 calc(33.333% - 1rem);
+        min-width: 250px;
+        background: var(--card-light);
+        padding: 1rem;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        transition: transform 0.2s ease;
     }
 
-    body.dark-mode .chart-card {
-        background-color: var(--card-dark);
-    }
-
-    .chart-card:hover {
-        transform: scale(1.005);
-    }
+        .chart-card:hover {
+            transform: scale(1.01);
+        }
 
     canvas {
         width: 100% !important;
-        height: 300px !important; /* Fixed height */
+        height: 300px !important;
     }
-
 
     .spinner {
         position: absolute;
@@ -102,7 +121,11 @@
         z-index: 10;
     }
 
-
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
 
     footer {
         text-align: center;
@@ -112,42 +135,52 @@
     }
 </style>
 
+<!-- Header Section -->
+<div class="header-container">
+    <div class="header-left">
+        <img src="~/images/syrmasgs.png" alt="Logo" class="header-logo" />
+    </div>
+    <div class="header-center">
+        <h2>📊 Honeywell Dashboard</h2>
+    </div>
+    <div class="header-right">
+        <span id="liveClock"></span>
+    </div>
 
-
-
-<h2>📊 Honeywell Dashboard</h2>
-
-<!-- Dark Mode Toggle -->
-<div class="toggle-container">
-    <label class="toggle-switch">
-        <input type="checkbox" id="darkModeToggle" />
-        Dark Mode
-    </label>
 </div>
 
+<!-- Dashboard Section -->
 <div class="dashboard-container">
-    <div class="chart-card">
-        <div class="spinner" id="spinnerLabLos"></div>
-        <canvas id="labLosChart"></canvas>
+    <!-- Row 1 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <div class="spinner" id="spinnerPie"></div>
+            <canvas id="piechart"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="spinner" id="spinnerLabLos"></div>
+            <canvas id="labLosChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="spinner" id="spinnerLineUtil"></div>
+            <canvas id="lineUtilChart"></canvas>
+        </div>
     </div>
-    <div class="chart-card">
-        <div class="spinner" id="spinnerLineUtil"></div>
-        <canvas id="lineUtilChart"></canvas>
-    </div>
-    <div class="chart-card">
-        <div class="spinner" id="spinnerYield"></div>
-        <canvas id="yieldChart"></canvas>
-    </div>
-    <div class="chart-card">
-        <div class="spinner" id="spinnerStage"></div>
-        <canvas id="lineChart1"></canvas>
-    </div>
-    <div class="chart-card">
-        <div class="spinner" id="spinnerPie"></div>
-        <canvas id="piechart"></canvas>
+
+    <!-- Row 2 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <div class="spinner" id="spinnerYield"></div>
+            <canvas id="yieldChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="spinner" id="spinnerStage"></div>
+            <canvas id="lineChart1"></canvas>
+        </div>
     </div>
 </div>
 
+<!-- Footer -->
 <footer>
     &copy; @DateTime.Now.Year - Manufacturing Analytics Dashboard
 </footer>
@@ -155,6 +188,10 @@
 <!-- jQuery & Chart.js -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+
+
 <script>
     // Plugin to draw text in the center of the doughnut chart
     const centerTextPlugin = {
@@ -177,30 +214,36 @@
 </script>
 
 <script>
-    $(document).ready(function () {
-        const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
-        const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
+    function updateClock() {
+        const now = new Date();
 
-        const toggle = document.getElementById('darkModeToggle');
-        const currentMode = localStorage.getItem('theme');
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        };
 
-        if (currentMode === 'dark') {
-            document.body.classList.add('dark-mode');
-            toggle.checked = true;
-        }
+        const formatted = now.toLocaleString('en-US', options);
+        document.getElementById('liveClock').innerText = formatted;
+    }
 
-        toggle.addEventListener('change', function () {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+    // Run clock immediately, then every second
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>
 
-        const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+<script>
+    const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
+    const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
 
+    const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+    const loadAllCharts = () => {
         // Show all spinners initially
         $('#spinnerLabLos, #spinnerLineUtil, #spinnerYield, #spinnerStage, #spinnerPie').show();
 
@@ -208,42 +251,38 @@
         $.get('/DashBoardMaster/GetlablosData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerLabLos').hide();
             if (!data || data.length === 0) return;
-
-            const labels = data.map(d => d.hourIntervel);
-            const values = data.map(d => d.labr_loss);
-            const bg = labels.map(() => generateColor());
-
+            const value = Math.round(data[0].labr_loss ?? 0);
+            const remaining = 100 - value;
             const ctx = document.getElementById('labLosChart').getContext('2d');
             if (window.labLosChartInstance) window.labLosChartInstance.destroy();
-
             window.labLosChartInstance = new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
-                    labels,
+                    labels: ['Loss', 'Remaining'],
                     datasets: [{
-                        label: 'Labor Loss (%)',
-                        data: values,
-                        backgroundColor: bg,
-                        borderWidth: 1
+                        data: [value, remaining],
+                        backgroundColor: ['#e74a3b', '#e0e0e0'],
+                        borderWidth: 1,
+                        offset: 10,
+                        borderRadius: 20
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    cutout: '50%',
                     plugins: {
-                        title: { display: true, text: 'Lab LOS by Hour Interval' },
-                        legend: { display: false },
+                        title: { display: true, text: 'Labor Loss' },
+                        legend: { position: 'bottom' },
                         tooltip: {
                             callbacks: {
                                 label: context => `${context.label}: ${context.raw.toFixed(2)}%`
                             }
-                        }
+                        },
+                        centerText: { text: `${value}%` }
                     },
-                    scales: {
-                        x: { title: { display: true, text: 'Hour Interval' } },
-                        y: { title: { display: true, text: 'Labor Loss (%)' } }
-                    }
-                }
+                    responsive: true,
+                    maintainAspectRatio: false
+                },
+                plugins: [centerTextPlugin]
             });
         });
 
@@ -251,42 +290,38 @@
         $.get('/DashBoardMaster/GetlineutilData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerLineUtil').hide();
             if (!data || data.length === 0) return;
-
-            const labels = data.map(d => d.hourIntervel);
-            const values = data.map(d => d.line_util);
-            const bg = labels.map(() => generateColor());
-
+            const value = Math.round(data[0].line_util ?? 0);
+            const remaining = 100 - value;
             const ctx = document.getElementById('lineUtilChart').getContext('2d');
             if (window.lineUtilChartInstance) window.lineUtilChartInstance.destroy();
-
             window.lineUtilChartInstance = new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
-                    labels,
+                    labels: ['Utilized', 'Remaining'],
                     datasets: [{
-                        label: 'Line Utilization (%)',
-                        data: values,
-                        backgroundColor: bg,
-                        borderWidth: 1
+                        data: [value, remaining],
+                        backgroundColor: ['#1cc88a', '#e0e0e0'],
+                        borderWidth: 1,
+                        offset: 10,
+                        borderRadius: 20
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    cutout: '50%',
                     plugins: {
-                        title: { display: true, text: 'Line Utilization by Hour Interval' },
-                        legend: { display: false },
+                        title: { display: true, text: 'Line Utilization' },
+                        legend: { position: 'bottom' },
                         tooltip: {
                             callbacks: {
                                 label: context => `${context.label}: ${context.raw.toFixed(2)}%`
                             }
-                        }
+                        },
+                        centerText: { text: `${value}%` }
                     },
-                    scales: {
-                        x: { title: { display: true, text: 'Hour Interval' } },
-                        y: { title: { display: true, text: 'Line Utilization (%)' } }
-                    }
-                }
+                    responsive: true,
+                    maintainAspectRatio: false
+                },
+                plugins: [centerTextPlugin]
             });
         });
 
@@ -295,14 +330,11 @@
             $('#spinnerYield').hide();
             const filtered = data.filter(d => d.yield != null && d.stage != null);
             if (filtered.length === 0) return;
-
             const labels = filtered.map(d => d.stage);
             const values = filtered.map(d => d.yield);
             const bg = labels.map(() => generateColor());
-
             const ctx = document.getElementById('yieldChart').getContext('2d');
             if (window.yieldChartInstance) window.yieldChartInstance.destroy();
-
             window.yieldChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -310,82 +342,133 @@
                     datasets: [{
                         label: 'Yield (%)',
                         data: values,
-                        backgroundColor: bg,
-                        borderWidth: 1
+                        backgroundColor: bg
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
+                        legend: {
+                            display: false  // hides legend completely
+                        },
                         title: { display: true, text: 'Yield by Stage' },
-                        legend: { display: false },
                         tooltip: {
                             callbacks: {
                                 label: context => `${context.label}: ${context.raw.toFixed(2)}%`
                             }
+                        },
+                        datalabels: {
+                            anchor: 'end',       // Anchored at end of bar
+                            align: 'start',      // Aligned inside the bar at the start
+                            offset: -15,         // Move a bit inward
+                            color: '#000',       // White text for dark bars
+                            font: { weight: 'bold' },
+                            formatter: value => value.toFixed(0) + '%'
                         }
                     },
                     scales: {
                         x: { title: { display: true, text: 'Stage' } },
-                        y: { title: { display: true, text: 'Yield (%)' }, beginAtZero: true }
-                    }
-                }
+                        y: { beginAtZero: true, title: { display: true, text: 'Yield (%)' } }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                },
+                plugins: [ChartDataLabels]
             });
         });
 
         // === 4. STAGE OUTPUT ===
         $.get('/DashBoardMaster/GetChartData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerStage').hide();
-            if (!data || data.length === 0) return;
+            if (!data) return;
 
-            const labels = data.map(d => d.hourIntervel || "N/A");
-            const targets = data.map(d => d.target || 0);
-            const actuals = data.map(d => d.logCount || 0);
+            // Helper to extract start hour from interval (e.g. "08-09" -> 8)
+            function getStartHour(intervalStr) {
+                const [start, end] = intervalStr.split('-');
+                return parseInt(start);
+            }
 
+            // Sort data chronologically based on start hour
+            const sortedData = data.slice().sort((a, b) => {
+                return getStartHour(a.hourIntervel) - getStartHour(b.hourIntervel);
+            });
+
+            // Extract labels and values
+            const labels = sortedData.map(d => d.hourIntervel);
+            const targets = sortedData.map(d => d.target || 0);
+            const actuals = sortedData.map(d => d.logCount || 0);
+
+            // Draw chart
             const ctx = document.getElementById('lineChart1').getContext('2d');
             if (window.lineChartInstance) window.lineChartInstance.destroy();
 
             window.lineChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels,
+                    labels: labels, // Use actual hour intervals like "08-09"
                     datasets: [
-                        { label: 'Plan', data: targets, backgroundColor: generateColor() },
-                        { label: 'Actual', data: actuals, backgroundColor: generateColor() }
+                        {
+                            label: 'Plan',
+                            data: targets,
+                            backgroundColor: generateColor()
+                        },
+                        {
+                            label: 'Actual',
+                            data: actuals,
+                            backgroundColor: generateColor()
+                        }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
-                        title: { display: true, text: 'Plan vs Actual by Hour Interval' },
-                        legend: { display: true }
+                        title: {
+                            display: true,
+                            text: 'Plan vs Actual by Hour Interval'
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            offset: -8,
+                            color: '#000',
+                            font: { weight: 'bold' },
+                            formatter: value => value.toFixed(0)
+                        }
                     },
                     scales: {
-                        x: { title: { display: true, text: 'Hour Interval' } },
-                        y: { beginAtZero: true, title: { display: true, text: 'Count' } }
-                    }
-                }
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour Interval'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Count'
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                },
+                plugins: [ChartDataLabels]
             });
         });
+
+
+
 
         // === 5. PIE CHART (OEE) ===
         $.get('/DashBoardMaster/GetChartDataoee', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerPie').hide();
             if (!data || data.length === 0) return;
-
             const labels = data.map(d => d.label);
             const values = data.map(d => d.value);
             const bg = labels.map(() => generateColor());
-
-            // Calculate OEE
             const oeeValue = (values[0] / 100) * (values[1] / 100) * (values[2] / 100);
-            const oeePercentage = (oeeValue * 100).toFixed(2); // As percentage
-
+            const oeePercentage = (oeeValue * 100).toFixed(0);
             const ctx = document.getElementById('piechart').getContext('2d');
             if (window.oeeChartInstance) window.oeeChartInstance.destroy();
-
             window.oeeChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -400,28 +483,36 @@
                 },
                 options: {
                     cutout: '50%',
-                    responsive: true,
-                    maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: 'OEE Breakdown: Availability, Performance, Quality'
-                        },
-                        legend: {
-                            position: 'bottom'
-                        },
+                        title: { display: true, text: 'OEE Breakdown' },
+                        legend: { position: 'bottom' },
                         tooltip: {
                             callbacks: {
                                 label: context => `${context.label}: ${context.raw.toFixed(2)}%`
                             }
                         },
-                        centerText: {
-                            text: `${oeePercentage}%`
-                        }
-                    }
+                        datalabels: {
+                            color: '#fff',
+                            formatter: value => value.toFixed(0) + '%',
+                            font: { weight: 'bold', size: 14 }
+                        },
+                        centerText: { text: `${oeePercentage}%` }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
                 },
-                plugins: [centerTextPlugin]
+                plugins: [centerTextPlugin, ChartDataLabels]
             });
         });
+    };
+
+    // Initial load
+    $(document).ready(function () {
+        Chart.register(ChartDataLabels);
+        loadAllCharts();
+
+        // Auto-refresh every 10 seconds (10,000 ms)
+        setInterval(loadAllCharts, 100000);
     });
 </script>
+

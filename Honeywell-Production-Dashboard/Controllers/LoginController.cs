@@ -23,12 +23,20 @@ namespace Honeywell_Production_Dashboard.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 var login=_interface_DashBoard.logindetails(model);
                 if (login != null)
                 {
                     if (model.employeeid == login.employeeid && model.password == login.password)
                     {
-                        return RedirectToAction("ProdcutionMaster", "DashBoardMaster");
+                        if (login.usertype == "Admin")
+                        {
+                            return RedirectToAction("ProdcutionMaster", "DashBoardMaster");
+                        }
+                        else
+                        {
+                            return RedirectToAction("DhasBoardInput", "DashBoardMaster");
+                        }
                     }
                     else
                     {
