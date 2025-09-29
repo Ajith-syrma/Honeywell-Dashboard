@@ -98,10 +98,21 @@
         transition: transform 0.2s ease;
     }
 
+<<<<<<< HEAD
         .chart-card:hover {
             transform: scale(1.01);
         }
 
+=======
+    body.dark-mode .chart-card {
+        background-color: var(--card-dark);
+    }
+
+    .chart-card:hover {
+        transform: scale(1.005);
+    }
+ */
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
     canvas {
         width: 100% !important;
         height: 300px !important;
@@ -217,6 +228,7 @@
     function updateClock() {
         const now = new Date();
 
+<<<<<<< HEAD
         const options = {
             weekday: 'long',
             year: 'numeric',
@@ -227,6 +239,16 @@
             second: '2-digit',
             hour12: true
         };
+=======
+        if (!fgname || !type || fgname.trim() === "" || type.trim() === "") {
+            alert("Please select both FG Name and Type before viewing the chart.");
+            window.location.href = "/DashBoardMaster/ProdcutionMaster"; 
+            return;
+        }
+
+        const toggle = document.getElementById('darkModeToggle');
+        const currentMode = localStorage.getItem('theme');
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
 
         const formatted = now.toLocaleString('en-US', options);
         document.getElementById('liveClock').innerText = formatted;
@@ -241,9 +263,14 @@
     const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
     const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
 
+<<<<<<< HEAD
     const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
 
     const loadAllCharts = () => {
+=======
+
+
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
         // Show all spinners initially
         $('#spinnerLabLos, #spinnerLineUtil, #spinnerYield, #spinnerStage, #spinnerPie').show();
 
@@ -251,14 +278,27 @@
         $.get('/DashBoardMaster/GetlablosData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerLabLos').hide();
             if (!data || data.length === 0) return;
+<<<<<<< HEAD
             const value = Math.round(data[0].labr_loss ?? 0);
             const remaining = 100 - value;
+=======
+
+            const labels = data.map(d => d.hourIntervel);
+            const values = data.map(d => d.labr_loss);
+            const bg = labels.map(() => generateColor());
+            console.log(data);
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
             const ctx = document.getElementById('labLosChart').getContext('2d');
             if (window.labLosChartInstance) window.labLosChartInstance.destroy();
             window.labLosChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
+<<<<<<< HEAD
                     labels: ['Loss', 'Remaining'],
+=======
+                   
+                    labels,
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
                     datasets: [{
                         data: [value, remaining],
                         backgroundColor: ['#e74a3b', '#e0e0e0'],
@@ -268,7 +308,11 @@
                     }]
                 },
                 options: {
+<<<<<<< HEAD
                     cutout: '50%',
+=======
+                    responsive: true,
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
                     plugins: {
                         title: { display: true, text: 'Labor Loss' },
                         legend: { position: 'bottom' },
@@ -307,7 +351,11 @@
                     }]
                 },
                 options: {
+<<<<<<< HEAD
                     cutout: '50%',
+=======
+                    responsive: true,
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
                     plugins: {
                         title: { display: true, text: 'Line Utilization' },
                         legend: { position: 'bottom' },
@@ -346,6 +394,10 @@
                     }]
                 },
                 options: {
+<<<<<<< HEAD
+=======
+                    responsive: true,
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
                     plugins: {
                         legend: {
                             display: false  // hides legend completely
@@ -419,6 +471,10 @@
                     ]
                 },
                 options: {
+<<<<<<< HEAD
+=======
+                    responsive: true,
+>>>>>>> 02376c2c66861debd4693b531254b3934d419792
                     plugins: {
                         title: {
                             display: true,
