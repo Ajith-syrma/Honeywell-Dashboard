@@ -10,32 +10,32 @@
     @* <title>@ViewData["Title"]</title> *@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
 </head>
-  <body class="bg-light">
+<body class="bg-light">
     <div class="container py-2">
         <div class="card shadow-lg rounded-4">
             <div class="card-header bg-primary text-white text-center rounded-top-4">
-              @*   <h3>@ViewData["Title"]</h3> *@
-              Production Master
+                @*   <h3>@ViewData["Title"]</h3> *@
+                Production Master
             </div>
             <div class="card-body">
-              @*   @if (ViewBag.Message != null)
+                @*   @if (ViewBag.Message != null)
                 {
-                    <div class="alert alert-success">@ViewBag.Message</div>
+                <div class="alert alert-success">@ViewBag.Message</div>
                 } *@
 
                 <form asp-action="ProdcutionMaster" asp-controller="DashBoardMaster" method="post">
                     <div class="row mb-4">
                         <div class="col-md-3">
-                            <label  class="form-label fw-semibold">Customer :</label>
-                          @*   <select asp-for="Customers" asp-items="Model.Customers" class="dropdown-item-text">
-                                <option value="">-- Select Customer --</option>
+                            <label class="form-label fw-semibold">Customer :</label>
+                            @*   <select asp-for="Customers" asp-items="Model.Customers" class="dropdown-item-text">
+                            <option value="">-- Select Customer --</option>
                             </select> *@
                             @Html.DropDownListFor(a => a.Customer, Model.Customers, new { @id = "ddlcustomers", @class = "form-control" })
                         </div>
-                       
+
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">FG Name :</label>
                             <select id="ddlFgName" asp-for="FGName" class="form-control">
@@ -43,7 +43,7 @@
                             <input type="hidden" asp-for="FGNameText" id="FGNameText" name="FGNameText" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">Type:</label>
+                            <label class="form-label fw-semibold">Type</label>
                             <select asp-for="Type" class="form-select">
                                 <option value="0">-- Select Type --</option>
                                 <option>V200</option>
@@ -52,7 +52,7 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">Shift:</label>
+                            <label class="form-label fw-semibold">shift_val</label>
                             <select asp-for="shift_val" class="form-select">
                                 <option value="0">-- Select shift --</option>
                                 <option>SHIFT-A</option>
@@ -63,31 +63,23 @@
                         </div>
                         <div class="col-md-3">
                             <label asp-for="Manpower" class="form-label fw-semibold">Manpower</label>
-                            <input asp-for="Manpower" id="txtmanpower" class="form-control" placeholder="Enter Manpower" />
+                            <input asp-for="Manpower" class="form-control" placeholder="Enter Manpower" />
                             <span asp-validation-for="Manpower" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3" id="lbldiv"style="align-content:center;margin-top:3%">
-                           
                         </div>
                     </div>
 
-                  @*   <div class="row mb-4">
-                     
+                    @*   <div class="row mb-4">
+
                     </div> *@
 
                     <div class="d-grid" style="width:10%;float:right;">
-                        <button type="submit" class="btn btn-success shadow">ViewChart</button>
-                    </div>
-
-                    <div class="d-grid" style="width:10%;float:right;">
-                        <button id="btnsubmit" type="button" class="btn btn-primary shadow">Submit</button>
+                        <button type="submit" class="btn btn-success shadow">Submit</button>
                     </div>
                 </form>
-           </div>    
-          
+
+            </div>
         </div>
-    </div>
-     @*  <div class="container py-2">
+        <div class="container py-2">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card" style="padding:1%;height:350px;">
@@ -95,137 +87,91 @@
                             <div style="overflow-x:auto;">
                                 <table class="table table-bordered w-100" id="tbldocuploaded">
                                     <thead class="text-center table-primary">
-                        <tr>
-                            <th hidden="hidden"></th>
-                            <th>Station</th>
-                            <th>Cycle Time</th>
-                            <th>Hourly Output</th>
-                            <th>Op Count</th>
-                            <th>Man Output</th>
-                            <th hidden="hidden"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if (Model != null)
-                        {
-                            @if(Model.inputDetails != null)
-                            {
-                          
-                        @foreach (var item in Model.inputDetails)
-                        {
-                            <tr>
-                                <td hidden="hidden">@item.TransactionId</td>
-                                <td>@item.station</td>
-                                <td>@item.cycle_time</td>
-                                <td>@item.Hourly_output</td>
-                                <td>@item.Op_count</td>
-                                <td>@item.Man_output</td>
-                                <td hidden="hidden">@item.FgId</td>
-                            </tr>
-                        }
-                            }
+                                        <tr>
+                                            <th hidden="hidden"></th>
+                                            <th>Station</th>
+                                            <th>Cycle Time</th>
+                                            <th>Hourly Output</th>
+                                            <th>Op Count</th>
+                                            <th>Man Output</th>
+                                            <th hidden="hidden"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null)
+                                        {
+                                            @if (Model.inputDetails != null)
+                                            {
 
-                        }
+                                                @foreach (var item in Model.inputDetails)
+                                                {
+                                                    <tr>
+                                                        <td hidden="hidden">@item.TransactionId</td>
+                                                        <td>@item.station</td>
+                                                        <td>@item.cycle_time</td>
+                                                        <td>@item.Hourly_output</td>
+                                                        <td>@item.Op_count</td>
+                                                        <td>@item.Man_output</td>
+                                                        <td hidden="hidden">@item.FgId</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                        }
                                     </tbody>
-                    </table>
-                    </<div>
-                        </div>
+                                </table>
+                                </<div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
-      </div> *@
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
 <script>
     $(document).ready({
 
     });
-      $('#ddlFgName').on('change', function () {
+    $('#ddlFgName').on('change', function () {
         var selectedText = $('#ddlFgName option:selected').text();
         $('#FGNameText').val(selectedText); // Store text in hidden input
     });
-    $('#ddlcustomers').on('change',function(){
+    $('#ddlcustomers').on('change', function () {
         debugger;
-        var Cusid=$('#ddlcustomers').val();
-      //  alert(Cusid);
+        var Cusid = $('#ddlcustomers').val();
+        //  alert(Cusid);
         $.ajax({
-            url:'/DashBoardMaster/getFGNameList',
-            type:'Get',
-            data:{cusid:Cusid},
-            async:false,
-            success:function(data)
-            {
-                  $('#ddlFgName').empty();
-                $.each(data,function(index,item)
-                {
+            url: '/DashBoardMaster/getFGNameList',
+            type: 'Get',
+            data: { cusid: Cusid },
+            async: false,
+            success: function (data) {
+                $('#ddlFgName').empty();
+                $.each(data, function (index, item) {
                     debugger;
-                    $('#ddlFgName').append($('<option>',{
-                        value:item.value,
-                        text:item.text
+                    $('#ddlFgName').append($('<option>', {
+                        value: item.value,
+                        text: item.text
                     }));
                 });
             },
-            error:function(error){
+            error: function (error) {
                 alert(error);
             }
         });
     });
-   $(document).ready(function () {
-      $('#btnsubmit').on('click', function () 
-      {
-          var manpower = $('#txtmanpower').val(); 
-          console.log(manpower);
-          if (manpower != null && manpower.trim() !== '' && manpower !=0) 
-          {
-                var result = parseInt(manpower) * 12;
-                $('#lbldiv').html('<label style="color: green; font-weight: bold; font-size: 18px;">The Target Output is set to <span style="color: red;">' + result + '</span> per hour</label>');
-            console.log(manpower); 
-          }
-         else 
-         {
-            alert('Please Enter manpower value!');
-         }
-      });
-   }); 
-    
 </script>
 
 <style>
- 
+
     thead tr th {
         position: sticky;
         top: 0;
         background: #f8f9fa;
         z-index: 2;
     }
-
-    .btn-primary
-    {
-      margin-right:10%;
-    }
-
-    html, body {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .container {
-        flex: 1 0 auto;
-    }
-
-    footer {    
-        flex-shrink: 0;
-        text-align: center;
-        padding: 10px 0;
-        background-color: #f8f9fa;
-        color: #6c757d;
-        border-top: 1px solid #dee2e6;
-    }
-
 </style>

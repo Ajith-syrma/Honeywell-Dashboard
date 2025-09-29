@@ -212,7 +212,7 @@ namespace Honeywell_Production_Dashboard.Models
 
             // 4. Performance
             // decimal idealCycleTime = dataManagement.getidealcycletime(dashboard_HourlyOP); // in seconds
-            decimal idealCycleTime = (decimal)200.00;
+            decimal idealCycleTime = (decimal)294.00;
             decimal performance = (totalCount > 0 && runtimeValue > 0)
                 ? ((decimal)totalCount * idealCycleTime / runtimeValue) * 100
                 : 0;
