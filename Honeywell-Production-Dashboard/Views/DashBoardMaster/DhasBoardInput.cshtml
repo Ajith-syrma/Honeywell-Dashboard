@@ -106,7 +106,8 @@
     .chart-card {
         flex: 1 1 calc(33.333% - 1rem);
         min-width: 480px;
-    @*background: var(--card-light);*@ background-color: #003b46;
+        background: var(--card-light);
+       /*  background-color: #003b46; */
         padding: 1rem;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
@@ -178,7 +179,7 @@
 <!-- Dashboard Section -->
 <div class="dashboard-container">
     <!-- Row 1 -->
-    <div class="chart-row">
+    <div class="chart-row" style="display:none">
         <div class="chart-card">
             <div class="spinner" id="spinnerPie"></div>
             <canvas id="piechart"></canvas>
@@ -219,6 +220,10 @@
 
 
 <script>
+    debugger;
+     const customer = @Html.Raw(JsonSerializer.Serialize(Model.Customer));
+      const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
+    const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
     // Plugin to draw text in the center of the doughnut chart
     const centerTextPlugin = {
         id: 'centerText',
@@ -270,7 +275,7 @@
 
     // Run clock immediately, then every second
     updateClock();
-    setInterval(updateClock, 1000);
+    setInterval(updateClock, 50000);
 </script>
 
 <script>
@@ -288,9 +293,10 @@
         '#3498db', '#2ecc71', '#f1c40f',
         '#9b59b6', '#1abc9c', '#e67e22', '#e74c3c'
     ];
-
-    const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
-    const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
+ 
+  
+     // const fgname="ECH3ELR00001";
+      // const type ="";
 
 
     const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
@@ -398,84 +404,150 @@
 
 
         // === 3. YIELD CHART ===
-        $.get('/DashBoardMaster/GetyieldData', { Fgname: fgname, Type: type }, function (data) {
-            $('#spinnerYield').hide();
-            if (!data || data.length === 0) return;
+        // $.get('/DashBoardMaster/GetyieldData', { Fgname: fgname, Type: type }, function (data) {
+        //     $('#spinnerYield').hide();
+        //     if (!data || data.length === 0) return;
 
-            // Define the fixed stage labels in correct order
-            const defaultStages = ["FCT-1", "FCT-2", "FCT-3", "RF-1", "RF-2", "RTC", "VOLT"];
+        //     // Define the fixed stage labels in correct order
+        //   //  const defaultStages = ["FCT-1", "FCT-2", "FCT-3", "RF-1", "RF-2", "RTC", "VOLT"];
 
-            // Create a mapping from stage name to yield value
-            const yieldMap = {};
-            data.forEach(d => {
-                const stageName = d.stage?.trim(); // Clean up whitespace
-                if (stageName && d.yield != null) {
-                    yieldMap[stageName] = parseFloat(d.yield);
-                }
-            });
+        //     // Create a mapping from stage name to yield value
+        //     const yieldMap = {};
+        //     data.forEach(d => {
+        //         const stageName = d.stage?.trim(); // Clean up whitespace
+        //         if (stageName && d.yield != null) {
+        //             yieldMap[stageName] = parseFloat(d.yield);
+        //         }
+        //     });
 
-            // Build values in the correct stage order
-            const labels = defaultStages;
-            const values = defaultStages.map(stage => yieldMap[stage] ?? 0);  // Use 0 if not found
-           // const bg = labels.map((_, i) => fixedBarColors[i % fixedBarColors.length]);
-           const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c'); // green or red
+        //     // Build values in the correct stage order
+        //     //const labels = defaultStages;
+        //    // const values = defaultStages.map(stage => yieldMap[stage] ?? 0);  // Use 0 if not found
+        //    // const bg = labels.map((_, i) => fixedBarColors[i % fixedBarColors.length]);
+        //    const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c'); // green or red
 
 
 
-            const ctx = document.getElementById('yieldChart').getContext('2d');
-            if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+        //     const ctx = document.getElementById('yieldChart').getContext('2d');
+        //     if (window.yieldChartInstance) window.yieldChartInstance.destroy();
 
-            window.yieldChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Yield (%)',
-                        data: values,
-                        backgroundColor: bg
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Yield by Stage',
-                            font: {
-                                weight: 'bold', size: 16
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: context => `${context.label}: ${context.raw.toFixed(2)}%`
-                            }
-                        },
-                        datalabels: {
-                            anchor: 'end',
-                            align: 'start',
-                            offset: -15,
-                            color: '#000',
-                            font: { weight: 'bold' },
-                            formatter: value => value.toFixed(0) + '%'
+        //     window.yieldChartInstance = new Chart(ctx, {
+        //         type: 'bar',
+        //         data: {
+        //             labels: labels,
+        //             datasets: [{
+        //                 label: 'Yield (%)',
+        //                 data: values,
+        //                 backgroundColor: bg
+        //             }]
+        //         },
+        //         options: {
+        //             responsive: true,
+        //             plugins: {
+        //                 legend: {
+        //                     display: false
+        //                 },
+        //                 title: {
+        //                     display: true,
+        //                     text: 'Yield by Stage',
+        //                     font: {
+        //                         weight: 'bold', size: 16
+        //                     }
+        //                 },
+        //                 tooltip: {
+        //                     callbacks: {
+        //                         label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+        //                     }
+        //                 },
+        //                 datalabels: {
+        //                     anchor: 'end',
+        //                     align: 'start',
+        //                     offset: -15,
+        //                     color: '#000',
+        //                     font: { weight: 'bold' },
+        //                     formatter: value => value.toFixed(0) + '%'
+        //                 }
+        //             },
+        //             scales: {
+        //                 x: { title: { display: true, text: 'Stage' } },
+        //                 y: {
+        //                     beginAtZero: true,
+        //                     title: { display: true, text: 'Yield (%)' }
+        //                 }
+        //             },
+        //             maintainAspectRatio: false
+        //         },
+        //         plugins: [ChartDataLabels]
+        //     });
+        // });
+
+     $.get('/DashBoardMaster/GetyieldData', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerYield').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API data
+        const labels = data.map(d => d.stage?.trim());
+        const values = data.map(d => parseFloat(d.yield ?? 0));
+
+        // Set color dynamically based on yield value
+        const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Create or update the chart
+        const ctx = document.getElementById('yieldChart').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+             type: 'bar', // ← changed to line chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: values,
+                    backgroundColor: bg,
+                    borderColor: '#3498db',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: bg
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Yield by Stage',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw.toFixed(2)}%`
                         }
                     },
-                    scales: {
-                        x: { title: { display: true, text: 'Stage' } },
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Yield (%)' }
-                        }
-                    },
-                    maintainAspectRatio: false
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) + '%'
+                    }
                 },
-                plugins: [ChartDataLabels]
-            });
+                scales: {
+                    x: { title: { display: true, text: 'Stage' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Yield (%)' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
         });
-
-
+    });
 
         // === 4. STAGE OUTPUT ===
         $.get('/DashBoardMaster/GetChartData', { Fgname: fgname, Type: type }, function (data) {

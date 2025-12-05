@@ -21,6 +21,11 @@
         public int LogCount { get; set; }
 
         public string FGName { get; set; }
+
+        public int hour { get; set; }
+
+        public int hourvalue { get; set; }
+
     }
 
 

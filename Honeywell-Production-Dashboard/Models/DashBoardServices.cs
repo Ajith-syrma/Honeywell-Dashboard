@@ -42,6 +42,82 @@ namespace Honeywell_Production_Dashboard.Models
             return resulthourly;
         }
 
+        public List<Dashboard_HourlyOP> gethourlyone(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.gethourlyone(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> getyieldDataOne(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.getyieldDataOne(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> gethourlytwo(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.gethourlytwo(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> getyieldDatatwo(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.getyieldDatatwo(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> gethourlythree(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.gethourlythree(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> getyieldDatathree(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.getyieldDatathree(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> gethourlyfour(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.gethourlyfour(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> getyieldDatafour(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.getyieldDatafour(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> gethourlyfive(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.gethourlyfive(dashboard_HourlyOP);
+            return resulthourly;
+        }
+
+        public List<Dashboard_HourlyOP> getyieldDatafive(Dashboard_HourlyOP dashboard_HourlyOP)
+        {
+            var resulthourly = dataManagement.getyieldDatafive(dashboard_HourlyOP);
+            return resulthourly;
+        }
+        public int insertHoneywellTransaction(H_Dashboard_Transaction h_Dashboard_Transaction)
+        {
+            var resulthourly = dataManagement.insertHoneywellTransaction(h_Dashboard_Transaction);
+            return resulthourly;
+        }
+
+        public int insertHoneywelldashboard_yield_Transaction(H_Dashboard_yield_Transaction h_Dashboard_Yield)
+        {
+            var resultYield = dataManagement.insertHoneywelldashboard_yield_Transaction(h_Dashboard_Yield);
+            return resultYield;
+        }
+
+        public int insertHoneywelldashboard_HourlyTransaction(H_Dashboard_hourly_Transaction h_Dashboard_Hourly)
+        {
+            var resultHourly = dataManagement.insertHoneywelldashboard_hourly_Transaction(h_Dashboard_Hourly);
+            return resultHourly;
+        }
         public List<Dashboard_HourlyOP> getHourlyyield(Dashboard_HourlyOP dashboard_HourlyOP)
         {
             var resulthourly = dataManagement.getHourlyyield(dashboard_HourlyOP);
@@ -68,6 +144,7 @@ namespace Honeywell_Production_Dashboard.Models
         public List<Lineutilization> getlineutildata(Lineutilization dashboard_lineutildata_OP)
         {
             var resultutildata = dataManagement.getlineutildata(dashboard_lineutildata_OP);
+            var objH_DashboardTrans = new H_Dashboard_Transaction();
 
             foreach (var value in resultutildata)
             {
@@ -82,6 +159,9 @@ namespace Honeywell_Production_Dashboard.Models
                 }
 
                 value.line_util = lin_util; //  Store the result directly in the object
+                objH_DashboardTrans.FGName = value.FGName;
+                //objH_DashboardTrans
+
             }
 
             return resultutildata;
@@ -144,7 +224,7 @@ namespace Honeywell_Production_Dashboard.Models
 
             // 2. Format current time like "25-09-2025 08:12:23"
             string currentFormatted = now.ToString("dd-MM-yyyy HH:mm:ss");
-            Console.WriteLine($"Current Time: {currentFormatted}");
+           // Console.WriteLine($"Current Time: {currentFormatted}");
 
             // 3. Determine shift start time
             DateTime shiftStart;
@@ -170,11 +250,11 @@ namespace Honeywell_Production_Dashboard.Models
 
             // 4. Format shift start time
             string shiftFormatted = shiftStart.ToString("dd-MM-yyyy HH:mm:ss");
-            Console.WriteLine($"Shift Start Time: {shiftFormatted}");
+           // Console.WriteLine($"Shift Start Time: {shiftFormatted}");
 
             // 5. Calculate the difference
             TimeSpan difference = now - shiftStart;
-            Console.WriteLine($"Time since shift started: {difference.Hours} hours, {difference.Minutes} minutes, {difference.Seconds} seconds");
+            //Console.WriteLine($"Time since shift started: {difference.Hours} hours, {difference.Minutes} minutes, {difference.Seconds} seconds");
 
 
             int minutesSinceShiftStart = (int)difference.TotalMinutes;
@@ -220,6 +300,7 @@ namespace Honeywell_Production_Dashboard.Models
 
 
             // 5. Add to result list
+           
             oeeResults.Add(new Dashboard_HourlyOP { Label = "Availability", Value = Math.Round(availability, 2) });
             oeeResults.Add(new Dashboard_HourlyOP { Label = "Performance", Value = Math.Round(performance, 2) });
             oeeResults.Add(new Dashboard_HourlyOP { Label = "Quality", Value = Math.Round(quality, 2) });

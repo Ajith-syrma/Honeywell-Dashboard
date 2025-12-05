@@ -1,0 +1,853 @@
+﻿@model CustomerMasterModel
+@using System.Text.Json
+@{
+    ViewBag.Title = "Dashboard";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<style>
+    /* Header Layout */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 0 10px;
+    }
+
+    .header-left,
+    .header-center,
+    .header-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-left {
+        justify-content: flex-start;
+    }
+
+    .header-center {
+        justify-content: center;
+    }
+
+    .header-right {
+        justify-content: flex-end;
+        font-size: 15px;
+        color: #444;
+        font-weight: 500;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .header-logo {
+        height: 60px;
+        width: auto;
+        margin-right: 10px;
+    }
+
+    /* Theme Variables */
+    :root {
+        --bg-light: #f4f7fa;
+        --card-light: #ffffff;
+        --text-light: #333;
+    }
+
+    /*     body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s, color 0.3s;
+        }
+     */
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0; /* Remove global padding */
+        background-color: var(--bg-light);
+        color: var(--text-light);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dashboard-container {
+        padding: 20px; /* Apply padding only where needed */
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .chart-row {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+
+
+    .chart-card {
+        flex: 1 1 calc(33.333% - 1rem);
+        min-width: 480px;
+        background: var(--card-light);
+        /*  background-color: #003b46; */
+        padding: 1rem;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        transition: transform 0.2s ease;
+    }
+
+
+
+
+        .chart-card:hover {
+            transform: scale(1.01);
+        }
+
+    body.dark-mode .chart-card {
+        background-color: var(--card-dark);
+    }
+
+    .chart-card:hover {
+        transform: scale(1.005);
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 300px !important;
+    }
+
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ccc;
+        border-top-color: #333;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 10;
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+        color: #777;
+    }
+</style>
+<div>
+    <div class="container-lg">
+        <div class="row">
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row" >
+                    <div class="col-lg-6">
+                    <div class="chart-card">
+                        <div class="spinner" id="spinnerPieone"></div>
+                        <canvas id="yieldpiechartOne"></canvas>
+                    </div>
+                    </div>
+                    <div class="col-lg-6">
+                    <div class="chart-card">
+                        <div class="spinner" id="spinnerLabLosone"></div>
+                        <canvas id="hourlyplanOne"></canvas>
+                    </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+        <div class="row">
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPietwo"></div>
+                            <canvas id="yieldpiecharttwo"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLostwo"></div>
+                            <canvas id="hourlyplantwo"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPiethree"></div>
+                            <canvas id="yieldpiechartthree"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLosthree"></div>
+                            <canvas id="hourlyplanthree"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPiefour"></div>
+                            <canvas id="yieldpiechartfour"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLosfour"></div>
+                            <canvas id="hourlyplanfour"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPiefive"></div>
+                            <canvas id="yieldpiechartfive"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLosfive"></div>
+                            <canvas id="hourlyplanfive"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
+<script>
+    $.get('/DashBoardMaster/GetyieldDataOne', { Fgname: fgname, Type: type }, function (data) {
+          $('#spinnerLabLos').hide();
+          if (!data || data.length === 0) return;
+
+          const value = Math.round(data[0].labr_loss ?? 0);
+          const remaining = 100 - value;
+
+
+          const labels = data.map(d => d.hourIntervel);
+          const values = data.map(d => d.labr_loss);
+          const bg = labels.map(() => generateColor());
+          console.log(data);
+
+          const ctx = document.getElementById('yieldpiechartOne').getContext('2d');
+          if (window.labLosChartInstance) window.labLosChartInstance.destroy();
+          window.labLosChartInstance = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+
+                  labels: ['Labour Loss', 'Labour Utilization'],
+                  datasets: [{
+                      data: [value, remaining],
+                      backgroundColor: ['#e74a3b', '#e0e0e0'],
+                      borderWidth: 1,
+                      offset: 10,
+                      borderRadius: 20
+                  }]
+              },
+              options: {
+
+                  cutout: '50%',
+
+                  responsive: true,
+
+                  plugins: {
+                      title: { display: true, text: 'Labour Loss', font: { weight: 'bold', size: 16 } },
+                      legend: { position: 'bottom' },
+                      tooltip: {
+                          callbacks: {
+                              label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                          }
+                      },
+                      centerText: { text: `${value}%` }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
+              },
+              plugins: [centerTextPlugin]
+          });
+      });
+
+      $.get('/DashBoardMaster/GetHourlyOne', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerYield').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API data
+        const labels = data.map(d => d.stage?.trim());
+        const values = data.map(d => parseFloat(d.yield ?? 0));
+
+        // Set color dynamically based on yield value
+        const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Create or update the chart
+        const ctx = document.getElementById('hourlyplanOne').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+             type: 'bar', // ← changed to line chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: values,
+                    backgroundColor: bg,
+                    borderColor: '#3498db',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: bg
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Yield by Stage',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) + '%'
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Stage' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Yield (%)' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatatwo', { Fgname: fgname, Type: type }, function (data) {
+          $('#spinnerLabLos').hide();
+          if (!data || data.length === 0) return;
+
+          const value = Math.round(data[0].labr_loss ?? 0);
+          const remaining = 100 - value;
+
+
+          const labels = data.map(d => d.hourIntervel);
+          const values = data.map(d => d.labr_loss);
+          const bg = labels.map(() => generateColor());
+          console.log(data);
+
+          const ctx = document.getElementById('yieldpiecharttwo').getContext('2d');
+          if (window.labLosChartInstance) window.labLosChartInstance.destroy();
+          window.labLosChartInstance = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+
+                  labels: ['Labour Loss', 'Labour Utilization'],
+                  datasets: [{
+                      data: [value, remaining],
+                      backgroundColor: ['#e74a3b', '#e0e0e0'],
+                      borderWidth: 1,
+                      offset: 10,
+                      borderRadius: 20
+                  }]
+              },
+              options: {
+
+                  cutout: '50%',
+
+                  responsive: true,
+
+                  plugins: {
+                      title: { display: true, text: 'Labour Loss', font: { weight: 'bold', size: 16 } },
+                      legend: { position: 'bottom' },
+                      tooltip: {
+                          callbacks: {
+                              label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                          }
+                      },
+                      centerText: { text: `${value}%` }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
+              },
+              plugins: [centerTextPlugin]
+          });
+      });
+
+      $.get('/DashBoardMaster/GetHourlytwo', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerYield').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API data
+        const labels = data.map(d => d.stage?.trim());
+        const values = data.map(d => parseFloat(d.yield ?? 0));
+
+        // Set color dynamically based on yield value
+        const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Create or update the chart
+        const ctx = document.getElementById('hourlyplantwo').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+             type: 'bar', // ← changed to line chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: values,
+                    backgroundColor: bg,
+                    borderColor: '#3498db',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: bg
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Yield by Stage',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) + '%'
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Stage' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Yield (%)' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatathree', { Fgname: fgname, Type: type }, function (data) {
+          $('#spinnerLabLos').hide();
+          if (!data || data.length === 0) return;
+
+          const value = Math.round(data[0].labr_loss ?? 0);
+          const remaining = 100 - value;
+
+
+          const labels = data.map(d => d.hourIntervel);
+          const values = data.map(d => d.labr_loss);
+          const bg = labels.map(() => generateColor());
+          console.log(data);
+
+          const ctx = document.getElementById('yieldpiechartthree').getContext('2d');
+          if (window.labLosChartInstance) window.labLosChartInstance.destroy();
+          window.labLosChartInstance = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+
+                  labels: ['Labour Loss', 'Labour Utilization'],
+                  datasets: [{
+                      data: [value, remaining],
+                      backgroundColor: ['#e74a3b', '#e0e0e0'],
+                      borderWidth: 1,
+                      offset: 10,
+                      borderRadius: 20
+                  }]
+              },
+              options: {
+
+                  cutout: '50%',
+
+                  responsive: true,
+
+                  plugins: {
+                      title: { display: true, text: 'Labour Loss', font: { weight: 'bold', size: 16 } },
+                      legend: { position: 'bottom' },
+                      tooltip: {
+                          callbacks: {
+                              label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                          }
+                      },
+                      centerText: { text: `${value}%` }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
+              },
+              plugins: [centerTextPlugin]
+          });
+      });
+
+      $.get('/DashBoardMaster/GetHourlythree', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerYield').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API data
+        const labels = data.map(d => d.stage?.trim());
+        const values = data.map(d => parseFloat(d.yield ?? 0));
+
+        // Set color dynamically based on yield value
+        const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Create or update the chart
+        const ctx = document.getElementById('hourlyplanthree').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+             type: 'bar', // ← changed to line chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: values,
+                    backgroundColor: bg,
+                    borderColor: '#3498db',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: bg
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Yield by Stage',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) + '%'
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Stage' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Yield (%)' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatafour', { Fgname: fgname, Type: type }, function (data) {
+          $('#spinnerLabLos').hide();
+          if (!data || data.length === 0) return;
+
+          const value = Math.round(data[0].labr_loss ?? 0);
+          const remaining = 100 - value;
+
+
+          const labels = data.map(d => d.hourIntervel);
+          const values = data.map(d => d.labr_loss);
+          const bg = labels.map(() => generateColor());
+          console.log(data);
+
+          const ctx = document.getElementById('yieldpiechartfour').getContext('2d');
+          if (window.labLosChartInstance) window.labLosChartInstance.destroy();
+          window.labLosChartInstance = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+
+                  labels: ['Labour Loss', 'Labour Utilization'],
+                  datasets: [{
+                      data: [value, remaining],
+                      backgroundColor: ['#e74a3b', '#e0e0e0'],
+                      borderWidth: 1,
+                      offset: 10,
+                      borderRadius: 20
+                  }]
+              },
+              options: {
+
+                  cutout: '50%',
+
+                  responsive: true,
+
+                  plugins: {
+                      title: { display: true, text: 'Labour Loss', font: { weight: 'bold', size: 16 } },
+                      legend: { position: 'bottom' },
+                      tooltip: {
+                          callbacks: {
+                              label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                          }
+                      },
+                      centerText: { text: `${value}%` }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
+              },
+              plugins: [centerTextPlugin]
+          });
+      });
+
+      $.get('/DashBoardMaster/GetHourlyfour', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerYield').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API data
+        const labels = data.map(d => d.stage?.trim());
+        const values = data.map(d => parseFloat(d.yield ?? 0));
+
+        // Set color dynamically based on yield value
+        const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Create or update the chart
+        const ctx = document.getElementById('hourlyplanfour').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+             type: 'bar', // ← changed to line chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: values,
+                    backgroundColor: bg,
+                    borderColor: '#3498db',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: bg
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Yield by Stage',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) + '%'
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Stage' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Yield (%)' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatafive', { Fgname: fgname, Type: type }, function (data) {
+          $('#spinnerLabLos').hide();
+          if (!data || data.length === 0) return;
+
+          const value = Math.round(data[0].labr_loss ?? 0);
+          const remaining = 100 - value;
+
+
+          const labels = data.map(d => d.hourIntervel);
+          const values = data.map(d => d.labr_loss);
+          const bg = labels.map(() => generateColor());
+          console.log(data);
+
+          const ctx = document.getElementById('yieldpiechartfive').getContext('2d');
+          if (window.labLosChartInstance) window.labLosChartInstance.destroy();
+          window.labLosChartInstance = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+
+                  labels: ['Labour Loss', 'Labour Utilization'],
+                  datasets: [{
+                      data: [value, remaining],
+                      backgroundColor: ['#e74a3b', '#e0e0e0'],
+                      borderWidth: 1,
+                      offset: 10,
+                      borderRadius: 20
+                  }]
+              },
+              options: {
+
+                  cutout: '50%',
+
+                  responsive: true,
+
+                  plugins: {
+                      title: { display: true, text: 'Labour Loss', font: { weight: 'bold', size: 16 } },
+                      legend: { position: 'bottom' },
+                      tooltip: {
+                          callbacks: {
+                              label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                          }
+                      },
+                      centerText: { text: `${value}%` }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
+              },
+              plugins: [centerTextPlugin]
+          });
+      });
+
+      $.get('/DashBoardMaster/GetHourlyfive', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerYield').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API data
+        const labels = data.map(d => d.stage?.trim());
+        const values = data.map(d => parseFloat(d.yield ?? 0));
+
+        // Set color dynamically based on yield value
+        const bg = values.map(value => value >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Create or update the chart
+        const ctx = document.getElementById('hourlyplanfive').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+             type: 'bar', // ← changed to line chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: values,
+                    backgroundColor: bg,
+                    borderColor: '#3498db',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: bg
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Yield by Stage',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw.toFixed(2)}%`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) + '%'
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Stage' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Yield (%)' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+</script>
+

@@ -26,7 +26,7 @@
                 <div class="alert alert-success">@ViewBag.Message</div>
                 } *@
 
-                <form asp-action="ProdcutionMaster" asp-controller="DashBoardMaster" method="post">
+                <form asp-action="Angenic" asp-controller="DashBoardMaster" method="post">
                     <div class="row mb-4">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Customer :</label>
@@ -44,10 +44,10 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Type</label>
-                            <select asp-for="Type" class="form-select">
-                                <option value="0">-- Select Type --</option>
+                            <select asp-for="Type" class="form-select" id="ddltype">
+                              @*   <option value="0">-- Select Type --</option>
                                 <option>V200</option>
-                                <option>Q600</option>
+                                <option>Q600</option> *@
 
                             </select>
                         </div>
@@ -142,8 +142,30 @@
 
     });
     $('#ddlFgName').on('change', function () {
+        debugger;
         var selectedText = $('#ddlFgName option:selected').text();
         $('#FGNameText').val(selectedText); // Store text in hidden input
+        var cusid=$('#ddlcustomers').val();
+        $('#ddltype').empty();
+        if(cusid==1)
+        {
+           var items = [
+        { value: 0, text: "Select Type" },
+        { value: 1, text: "V200" },
+        { value: 2, text: "Q600" }
+    ];
+
+        $.each(items, function (i, item) {
+        $('#ddltype').append($('<option>', {
+            value: item.value,
+            text: item.text
+        }));
+    });
+        }
+        else if(cusid==2)
+        {
+            $('#ddltype').append('<option value="0">Select Type</option>');
+        }
     });
     $('#ddlcustomers').on('change', function () {
         debugger;

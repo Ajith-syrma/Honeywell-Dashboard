@@ -1,0 +1,1079 @@
+﻿@model CustomerMasterModel
+@using System.Text.Json
+@{
+    ViewBag.Title = "Dashboard";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/dashboard.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<style>
+    /* Header Layout */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 0 10px;
+    }
+
+    .header-left,
+    .header-center,
+    .header-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-left {
+        justify-content: flex-start;
+    }
+
+    .header-center {
+        justify-content: center;
+    }
+
+    .header-right {
+        justify-content: flex-end;
+        font-size: 15px;
+        color: #444;
+        font-weight: 500;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .header-logo {
+        height: 60px;
+        width: auto;
+        margin-right: 10px;
+    }
+
+    /* Theme Variables */
+    :root {
+        --bg-light: #f4f7fa;
+        --card-light: #ffffff;
+        --text-light: #333;
+    }
+
+    /*     body {
+                    font-family: 'Roboto', sans-serif;
+                    margin: 0;
+                    padding: 20px;
+                    background-color: var(--bg-light);
+                    color: var(--text-light);
+                    transition: background-color 0.3s, color 0.3s;
+                }
+             */
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0; /* Remove global padding */
+        background-color: var(--bg-light);
+        color: var(--text-light);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dashboard-container {
+        padding: 20px; /* Apply padding only where needed */
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .chart-row {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+
+
+    .chart-card {
+        flex: 1 1 calc(33.333% - 1rem);
+        min-width: 480px;
+        background: var(--card-light);
+        /*  background-color: #003b46; */
+        padding: 1rem;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        transition: transform 0.2s ease;
+    }
+
+
+
+
+        .chart-card:hover {
+            transform: scale(1.01);
+        }
+
+    body.dark-mode .chart-card {
+        background-color: var(--card-dark);
+    }
+
+    .chart-card:hover {
+        transform: scale(1.005);
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 300px !important;
+    }
+
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ccc;
+        border-top-color: #333;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 10;
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+        color: #777;
+    }
+</style>
+<div>
+    <div class="container-lg">
+      
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class ="chart-row">
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPieone"></div>
+                            <canvas id="yieldpiechartOne"></canvas>
+                        </div>
+                   
+                    <div class="chart-card">
+                        <div class="spinner" id="spinnerLabLosone"></div>
+                        <canvas id="hourlyplanOne"></canvas>
+                    </div>
+                </div>
+            </div>
+     
+       
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                 
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPietwo"></div>
+                            <canvas id="yieldpiecharttwo"></canvas>
+                        </div>
+                   
+                  
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLostwo"></div>
+                            <canvas id="hourlyplantwo"></canvas>
+                        </div>
+                   
+                </div>
+            </div>
+       
+        
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                  
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPiethree"></div>
+                            <canvas id="yieldpiechartthree"></canvas>
+                        </div>
+                  
+                  
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLosthree"></div>
+                            <canvas id="hourlyplanthree"></canvas>
+                        </div>
+                   
+                </div>
+            </div>
+        
+       
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                   
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPiefour"></div>
+                            <canvas id="yieldpiechartfour"></canvas>
+                        </div>
+                  
+                  
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLosfour"></div>
+                            <canvas id="hourlyplanfour"></canvas>
+                        </div>
+                   
+                </div>
+            </div>
+        
+      
+            <div class="dashboard-container">
+                <!-- Row 1 -->
+                <div class="chart-row">
+                  
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerPiefive"></div>
+                            <canvas id="yieldpiechartfive"></canvas>
+                        </div>
+                   
+                
+                        <div class="chart-card">
+                            <div class="spinner" id="spinnerLabLosfive"></div>
+                            <canvas id="hourlyplanfive"></canvas>
+                        </div>
+                  
+                </div>
+            </div>
+       
+    </div>
+</div>
+
+<script>
+    debugger;
+      const centerTextPlugin = {
+        id: 'centerText',
+        beforeDraw(chart) {
+            const { width, height, ctx } = chart;
+            ctx.restore();
+            const fontSize = (height / 150).toFixed(2);
+            ctx.font = `${fontSize}em sans-serif`;
+            ctx.textBaseline = "middle";
+
+            const text = chart.config.options.plugins.centerText?.text || '';
+            const textX = Math.round((width - ctx.measureText(text).width) / 2);
+            const textY = height / 2;
+
+            ctx.fillText(text, textX, textY);
+            ctx.save();
+        }
+    };
+
+       const colorSet = {
+        plan: '#3498db',           // Blue for Plan
+        actual: '#2ecc71',         // Green for Actual
+        yield: '#f39c12',          // Orange for Yield
+        pie: ['#FF6B6B', '#4ECDC4', '#1A535C']
+
+
+    };
+
+    const fixedBarColors = [
+        '#3498db', '#2ecc71', '#f1c40f',
+        '#9b59b6', '#1abc9c', '#e67e22', '#e74c3c'
+    ];
+    const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
+    const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
+     
+       const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+           function lightenColor(color, percent) {
+        const num = parseInt(color.replace("#", ""), 16),
+            amt = Math.round(2.55 * percent),
+            R = (num >> 16) + amt,
+            G = (num >> 8 & 0x00FF) + amt,
+            B = (num & 0x0000FF) + amt;
+        return "#" + (
+            0x1000000 +
+            (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+            (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+            (B < 255 ? (B < 1 ? 0 : B) : 255)
+        ).toString(16).slice(1);
+    }
+
+      $.get('/DashBoardMaster/GetyieldDataOne', { Fgname: fgname, Type: type }, function (datay) {
+        $('#spinnerPieone').hide();
+        if (!datay || datay.length === 0) return;
+
+        debugger;
+        console.log(datay);
+
+        // Extract and prepare data
+        const label = datay.map(d => d.stage?.trim());
+        const passCount = datay.reduce((sum, d) => sum + parseFloat(d.passcountyield ?? 0), 0);
+        const failCount = datay.reduce((sum, d) => sum + parseFloat(d.failcountyield ?? 0), 0);
+        const totalCount = datay.map(d => parseFloat(d.yield ?? 0));
+
+        const labels = ['Pass', 'Fail'];
+        const values = [passCount, failCount];
+        const bgColors = ['#4CAF50', '#F44336']; // green for pass, red for fail
+
+        // Chart initialization
+        const ctx = document.getElementById('yieldpiechartOne').getContext('2d');
+        if (window.labLosChartInstanceone) window.labLosChartInstanceone.destroy();
+
+        // Custom plugin to show total count at the center
+        const totalCenterText = {
+            id: 'totalCenterText',
+            afterDraw(chart) {
+                const { ctx, chartArea: { width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 10px Arial';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`Total: ${totalCount}`, width / 2, height / 2);
+                ctx.restore();
+            }
+        };
+
+        window.labLosChartInstanceone = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: bgColors,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    offset: 10
+                }]
+            },
+            options: {
+                cutout: '60%',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: label,
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw}`
+                        }
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [totalCenterText]
+        });
+    });
+
+
+
+        $.get('/DashBoardMaster/GetHourlyOne', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerLabLosone').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API
+        const labeltext = data.map(d => d.stage?.trim());
+        const labels = data.map(d => d.hour);
+        const values = data.map(d => parseFloat(d.hourvalue ?? 0));
+        const targets = data.map(d => parseFloat(d.target ?? 0));
+
+        // Set bar colors based on yield value
+        const barColors = values.map(v => v >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Chart setup
+        const ctx = document.getElementById('hourlyplanOne').getContext('2d');
+        if (window.yieldChartInstance) window.yieldChartInstance.destroy();
+
+        window.yieldChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                      {
+                        type: 'line',
+                        label: 'Target',
+                        data: targets,
+                        borderColor: '#f1c40f',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        pointBackgroundColor: '#f39c12',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Yield',
+                        data: values,
+                        backgroundColor: barColors,
+                        borderColor: '#2980b9',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }
+                  
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: 'Hourly Yield vs Target',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.raw.toFixed(2)}`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1)
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Hour' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Percentage' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+
+       $.get('/DashBoardMaster/GetyieldDatatwo', { Fgname: fgname, Type: type }, function (datayn) {
+        $('#spinnerPietwo').hide();
+        if (!datayn || datayn.length === 0) return;
+
+        debugger;
+        console.log(datayn);
+
+        // Extract and prepare data
+        const passCount = datayn.reduce((sum, d) => sum + parseFloat(d.passcountyield ?? 0), 0);
+        const failCount = datayn.reduce((sum, d) => sum + parseFloat(d.failcountyield ?? 0), 0);
+        const totalCount = datayn.map(d => parseFloat(d.yield ?? 0));
+
+        const labels = ['Pass', 'Fail'];
+        const values = [passCount, failCount];
+        const bgColors = ['#4CAF50', '#F44336']; // green for pass, red for fail
+
+        // Chart initialization
+        const ctx = document.getElementById('yieldpiecharttwo').getContext('2d');
+        if (window.labLosChartInstancetwo) window.labLosChartInstancetwo.destroy();
+
+        // Custom plugin to show total count at the center
+        const totalCenterText = {
+            id: 'totalCenterText',
+            afterDraw(chart) {
+                const { ctx, chartArea: { width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 10px Arial';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`Total: ${totalCount}`, width / 2, height / 2);
+                ctx.restore();
+            }
+        };
+
+        window.labLosChartInstancetwo = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: bgColors,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    offset: 10
+                }]
+            },
+            options: {
+                cutout: '60%',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Pass vs Fail Summary',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw}`
+                        }
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [totalCenterText]
+        });
+        });
+
+      $.get('/DashBoardMaster/GetHourlytwo', { Fgname: fgname, Type: type }, function (data) {
+         $('#spinnerLabLostwo').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API
+        const labels = data.map(d => d.hour);
+        const values = data.map(d => parseFloat(d.hourvalue ?? 0));
+        const targets = data.map(d => parseFloat(d.target ?? 0));
+
+        // Set bar colors based on yield value
+        const barColors = values.map(v => v >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Chart setup
+        const ctx = document.getElementById('hourlyplantwo').getContext('2d');
+        if (window.yieldChartInstancetwo) window.yieldChartInstancetwo.destroy();
+
+        window.yieldChartInstancetwo = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Target',
+                        data: targets,
+                        borderColor: '#f1c40f',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        pointBackgroundColor: '#f39c12',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+                      {
+                        type: 'bar',
+                        label: 'Yield',
+                        data: values,
+                        backgroundColor: barColors,
+                        borderColor: '#2980b9',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: 'Hourly Yield vs Target',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.raw.toFixed(2)}`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) 
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Hour' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Percentage' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatathree', { Fgname: fgname, Type: type }, function (data) {
+          $('#spinnerPiethree').hide();
+        if (!data || data.length === 0) return;
+
+        debugger;
+        console.log(data);
+
+        // Extract and prepare data
+        const passCount = data.reduce((sum, d) => sum + parseFloat(d.passcountyield ?? 0), 0);
+        const failCount = data.reduce((sum, d) => sum + parseFloat(d.failcountyield ?? 0), 0);
+        const totalCount = data.map(d => parseFloat(d.yield ?? 0));
+
+        const labels = ['Pass', 'Fail'];
+        const values = [passCount, failCount];
+        const bgColors = ['#4CAF50', '#F44336']; // green for pass, red for fail
+
+        // Chart initialization
+        const ctx = document.getElementById('yieldpiechartthree').getContext('2d');
+        if (window.labLosChartInstancetthree) window.labLosChartInstancetthree.destroy();
+
+        // Custom plugin to show total count at the center
+        const totalCenterText = {
+            id: 'totalCenterText',
+            afterDraw(chart) {
+                const { ctx, chartArea: { width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 10px Arial';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`Total: ${totalCount}`, width / 2, height / 2);
+                ctx.restore();
+            }
+        };
+
+        window.labLosChartInstancetthree = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: bgColors,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    offset: 10
+                }]
+            },
+            options: {
+                cutout: '60%',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Pass vs Fail Summary',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw}`
+                        }
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [totalCenterText]
+        });
+        });
+
+      $.get('/DashBoardMaster/GetHourlythree', { Fgname: fgname, Type: type }, function (data) {
+         $('#spinnerLabLosthree').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API
+        const labels = data.map(d => d.hour);
+        const values = data.map(d => parseFloat(d.hourvalue ?? 0));
+        const targets = data.map(d => parseFloat(d.target ?? 0));
+
+        // Set bar colors based on yield value
+        const barColors = values.map(v => v >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Chart setup
+        const ctx = document.getElementById('hourlyplanthree').getContext('2d');
+        if (window.yieldChartInstancethree) window.yieldChartInstancethree.destroy();
+
+        window.yieldChartInstancethree = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Target',
+                        data: targets,
+                        borderColor: '#f1c40f',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        pointBackgroundColor: '#f39c12',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+
+                    {
+                        type: 'bar',
+                        label: 'Yield',
+                        data: values,
+                        backgroundColor: barColors,
+                        borderColor: '#2980b9',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }
+                    
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: 'Hourly Yield vs Target',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.raw.toFixed(2)}`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1)
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Hour' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Percentage' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatafour', { Fgname: fgname, Type: type }, function (datax) {
+             $('#spinnerPiefour').hide();
+        if (!datax || datax.length === 0) return;
+
+        debugger;
+        console.log(datax);
+
+        // Extract and prepare data
+        const passCount = datax.reduce((sum, d) => sum + parseFloat(d.passcountyield ?? 0), 0);
+        const failCount = datax.reduce((sum, d) => sum + parseFloat(d.failcountyield ?? 0), 0);
+        const totalCount = datax.map(d => parseFloat(d.yield ?? 0));
+
+        const labels = ['Pass', 'Fail'];
+        const values = [passCount, failCount];
+        const bgColors = ['#4CAF50', '#F44336']; // green for pass, red for fail
+
+        // Chart initialization
+        const ctx = document.getElementById('yieldpiechartfour').getContext('2d');
+        if (window.labLosChartInstancetfour) window.labLosChartInstancetfour.destroy();
+
+        // Custom plugin to show total count at the center
+        const totalCenterText = {
+            id: 'totalCenterText',
+            afterDraw(chart) {
+                const { ctx, chartArea: { width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 10px Arial';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`Total: ${totalCount}`, width / 2, height / 2);
+                ctx.restore();
+            }
+        };
+
+        window.labLosChartInstancetfour = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: bgColors,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    offset: 10
+                }]
+            },
+            options: {
+                cutout: '60%',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Pass vs Fail Summary',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw}`
+                        }
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [totalCenterText]
+        });
+        });
+
+      $.get('/DashBoardMaster/GetHourlyfour', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerLabLosfour').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API
+        const labels = data.map(d => d.hour);
+        const values = data.map(d => parseFloat(d.hourvalue ?? 0));
+        const targets = data.map(d => parseFloat(d.target ?? 0));
+
+        // Set bar colors based on yield value
+        const barColors = values.map(v => v >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Chart setup
+        const ctx = document.getElementById('hourlyplanfour').getContext('2d');
+        if (window.yieldChartInstancefour) window.yieldChartInstancefour.destroy();
+
+        window.yieldChartInstancefour = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                     {
+                        type: 'line',
+                        label: 'Target',
+                        data: targets,
+                        borderColor: '#f1c40f',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        pointBackgroundColor: '#f39c12',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+
+                    {
+                        type: 'bar',
+                        label: 'Yield',
+                        data: values,
+                        backgroundColor: barColors,
+                        borderColor: '#2980b9',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }
+                   
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: 'Hourly Yield vs Target',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.raw.toFixed(2)}`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) 
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Hour' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Percentage' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+       $.get('/DashBoardMaster/GetyieldDatafive', { Fgname: fgname, Type: type }, function (data) {
+            $('#spinnerPiefive').hide();
+        if (!data || data.length === 0) return;
+
+        debugger;
+        console.log(data);
+
+        // Extract and prepare data
+        const passCount = data.reduce((sum, d) => sum + parseFloat(d.passcountyield ?? 0), 0);
+        const failCount = data.reduce((sum, d) => sum + parseFloat(d.failcountyield ?? 0), 0);
+        const totalCount = data.map(d => parseFloat(d.yield ?? 0));
+
+        const labels = ['Pass', 'Fail'];
+        const values = [passCount, failCount];
+        const bgColors = ['#4CAF50', '#F44336']; // green for pass, red for fail
+
+        // Chart initialization
+        const ctx = document.getElementById('yieldpiechartfive').getContext('2d');
+        if (window.labLosChartInstancetfive) window.labLosChartInstancetfive.destroy();
+
+        // Custom plugin to show total count at the center
+        const totalCenterText = {
+            id: 'totalCenterText',
+            afterDraw(chart) {
+                const { ctx, chartArea: { width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 10px Arial';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`Total: ${totalCount}`, width / 2, height / 2);
+                ctx.restore();
+            }
+        };
+
+        window.labLosChartInstancetfive = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: bgColors,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    offset: 10
+                }]
+            },
+            options: {
+                cutout: '60%',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Pass vs Fail Summary',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.label}: ${context.raw}`
+                        }
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [totalCenterText]
+        });
+        });
+
+      $.get('/DashBoardMaster/GetHourlyfive', { Fgname: fgname, Type: type }, function (data) {
+        $('#spinnerLabLosfive').hide();
+        if (!data || data.length === 0) return;
+
+        // Extract labels and values dynamically from API
+        const labels = data.map(d => d.hour);
+        const values = data.map(d => parseFloat(d.hourvalue ?? 0));
+        const targets = data.map(d => parseFloat(d.target ?? 0));
+
+        // Set bar colors based on yield value
+        const barColors = values.map(v => v >= 90 ? '#2ecc71' : '#e74c3c');
+
+        // Chart setup
+        const ctx = document.getElementById('hourlyplanfive').getContext('2d');
+        if (window.yieldChartInstancefive) window.yieldChartInstancefive.destroy();
+
+        window.yieldChartInstancefive = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                       {
+                        type: 'line',
+                        label: 'Target',
+                        data: targets,
+                        borderColor: '#f1c40f',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        pointBackgroundColor: '#f39c12',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Yield',
+                        data: values,
+                        backgroundColor: barColors,
+                        borderColor: '#2980b9',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }
+                 
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: 'Hourly Yield vs Target',
+                        font: { weight: 'bold', size: 16 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.raw.toFixed(2)}`
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: value => value.toFixed(1) 
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Hour' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Percentage' },
+                        max: 100
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+</script>
+
