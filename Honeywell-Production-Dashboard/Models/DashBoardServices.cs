@@ -107,6 +107,11 @@ namespace Honeywell_Production_Dashboard.Models
             return resulthourly;
         }
 
+        public string getshift(DateTime today)
+        {
+            var shift = dataManagement.GetShiftLabel(today);
+            return shift;
+        }
         public int insertHoneywelldashboard_yield_Transaction(H_Dashboard_yield_Transaction h_Dashboard_Yield)
         {
             var resultYield = dataManagement.insertHoneywelldashboard_yield_Transaction(h_Dashboard_Yield);
@@ -184,7 +189,8 @@ namespace Honeywell_Production_Dashboard.Models
                 var actualworkdhrs = (actualworkdhrs1 / 60)/60;
                 var Produced_qty = value.Produced_qty;
                 var presenthrs = manpower* (actualworkdhrs) ;
-                var gd_hrs = 1.347 * (Produced_qty); 
+                //var gd_hrs = 1.347 * (Produced_qty); 
+                var gd_hrs = 0.743 * (Produced_qty);
                 var val1 = (decimal)presenthrs - (decimal)gd_hrs;
                 //var lineutilization = (Produced_qty/planned_qty)*100;
 
@@ -293,7 +299,8 @@ namespace Honeywell_Production_Dashboard.Models
 
             // 4. Performance
             // decimal idealCycleTime = dataManagement.getidealcycletime(dashboard_HourlyOP); // in seconds
-            decimal idealCycleTime = (decimal)294.00;
+            // decimal idealCycleTime = (decimal)294.00;
+            decimal idealCycleTime = (decimal)148.00;
             decimal performance = (totalCount > 0 && runtimeValue > 0)
                 ? ((decimal)totalCount * idealCycleTime / runtimeValue) * 100
                 : 0;

@@ -30,7 +30,7 @@ namespace Honeywell_Production_Dashboard.Controllers
         [HttpPost]
         public IActionResult ProdcutionMaster(CustomerMasterModel customermodel)
         {
-            //var inputResult = interface_DashBoard.insertManpower(customermodel); 
+            var inputResult = interface_DashBoard.insertManpower(customermodel); 
             customermodel.Customers = interface_DashBoard.getCustomerName();
 
             var getProdcutiondettails = interface_DashBoard.getCustomerMasterModels();
@@ -46,7 +46,7 @@ namespace Honeywell_Production_Dashboard.Controllers
         [HttpPost]
         public IActionResult Angenic(CustomerMasterModel customermodel)
         {
-           // var inputResult = interface_DashBoard.insertManpower(customermodel); //Testing
+            var inputResult = interface_DashBoard.insertManpower(customermodel); //Testing
             customermodel.Customers = interface_DashBoard.getCustomerName();
 
             var getProdcutiondettails = interface_DashBoard.getCustomerMasterModels();
@@ -169,73 +169,75 @@ namespace Honeywell_Production_Dashboard.Controllers
             var objDashboard1 = new Dashboard_HourlyOP();
             var objDashboard2 = new Lineutilization();
             var objDashboard3 = new labrlosspercentage();
-            var objoeeDashboard = new Dashboard_HourlyOP();
-            var objYield = new H_Dashboard_yield_Transaction();
-            var objDashboardop = new H_Dashboard_hourly_Transaction();
+           
+           
+        
+         
 
             obj.FGName = dashboardHourly.FGNameText;
             obj.Type = dashboardHourly.Type;
-            obj.Customer=dashboardHourly.Customer;
+            obj.Customer = dashboardHourly.Customer;
+            obj.shift_val = dashboardHourly.shift_val;
+            ViewBag.shift = dashboardHourly.shift_val;
+            //objDashboard1.FGName = dashboardHourly.FGNameText;
+            //objDashboard1.TestType = dashboardHourly.Type;
+            //objDashboard2.FGName = dashboardHourly.FGNameText;
+            //objDashboard2.TestType = dashboardHourly.Type;
+            //objDashboard3.FGName = dashboardHourly.FGNameText;
+            // objDashboard3.TestType = dashboardHourly.Type;
+            //objoeeDashboard.FGName = dashboardHourly.FGNameText;
+            //objoeeDashboard.TestType = dashboardHourly.Type;
 
-            objDashboard1.FGName = dashboardHourly.FGNameText;
-            objDashboard1.TestType = dashboardHourly.Type;
-            objDashboard2.FGName = dashboardHourly.FGNameText;
-            objDashboard2.TestType = dashboardHourly.Type;
-            objDashboard3.FGName = dashboardHourly.FGNameText;
-            objDashboard3.TestType = dashboardHourly.Type;
-            objoeeDashboard.FGName = dashboardHourly.FGNameText;
-            objoeeDashboard.TestType = dashboardHourly.Type;
 
+            //var dashboardyield = interface_DashBoard.getHourlyyield(objDashboard1);
+            //var dashboardlineutil = interface_DashBoard.getlineutildata(objDashboard2);
+            //var dashboardlablosper = interface_DashBoard.getlablosData(objDashboard3);
 
-            var dashboardyield = interface_DashBoard.getHourlyyield(objDashboard1);
-            var dashboardlineutil = interface_DashBoard.getlineutildata(objDashboard2);
-            var dashboardlablosper = interface_DashBoard.getlablosData(objDashboard3);
+            //var OEE = interface_DashBoard.getoee(objoeeDashboard);
+            //if (OEE.Count > 0)
+            //{
+            //    objHtrans.CustomerName = dashboardHourly.Customer;
+            //    objHtrans.FGName = dashboardHourly.FGNameText;
+            //    objHtrans.OEE_Performance = OEE.Where(a => a.Label == "Performance").Select(a => a.Value).FirstOrDefault();
+            //    objHtrans.OEE_Quality = OEE.Where(a => a.Label == "Quality").Select(a => a.Value).FirstOrDefault();
+            //    objHtrans.OEE_Availability = OEE.Where(a => a.Label == "Availability").Select(a => a.Value).FirstOrDefault();
+            //    objHtrans.OEE = objHtrans.OEE_Performance * objHtrans.OEE_Quality * objHtrans.OEE_Availability;
+            //    objHtrans.Labourloss = dashboardlablosper.Select(a => a.labr_loss).FirstOrDefault();
+            //    objHtrans.LineUtililization = dashboardlineutil.Select(a => a.line_util).FirstOrDefault();
+            //    objHtrans.Honeywell_shift = dashboardHourly.shift_val;
+            //    objHtrans.Createid = "70192";
+            //    objHtrans.Updateid = "70192";
+            //    var resultHourlyDashBoard = interface_DashBoard.insertHoneywellTransaction(objHtrans);
 
-            var OEE = interface_DashBoard.getoee(objoeeDashboard);
-            if (OEE.Count > 0)
-            {
-                objHtrans.CustomerName = dashboardHourly.Customer;
-                objHtrans.FGName = dashboardHourly.FGNameText;
-                objHtrans.OEE_Performance = OEE.Where(a => a.Label == "Performance").Select(a => a.Value).FirstOrDefault();
-                objHtrans.OEE_Quality = OEE.Where(a => a.Label == "Quality").Select(a => a.Value).FirstOrDefault();
-                objHtrans.OEE_Availability = OEE.Where(a => a.Label == "Availability").Select(a => a.Value).FirstOrDefault();
-                objHtrans.OEE = objHtrans.OEE_Performance * objHtrans.OEE_Quality * objHtrans.OEE_Availability;
-                objHtrans.Labourloss = dashboardlablosper.Select(a => a.labr_loss).FirstOrDefault();
-                objHtrans.LineUtililization = dashboardlineutil.Select(a => a.line_util).FirstOrDefault();
-                objHtrans.Honeywell_shift = dashboardHourly.shift_val;
-                objHtrans.Createid = "70192";
-                objHtrans.Updateid = "70192";
-                var resultHourlyDashBoard = interface_DashBoard.insertHoneywellTransaction(objHtrans);
-                
-            }
-           
-            if (dashboardyield.Count > 0)
-            {
-                objYield.FCT_1 = dashboardyield.Where(a => a.Stage == "FCT-1").Select(a => a.Yield).FirstOrDefault();
-                objYield.FCT_2 = dashboardyield.Where(a => a.Stage == "FCT-2").Select(a => a.Yield).FirstOrDefault();
-                objYield.FCT_3 = dashboardyield.Where(a => a.Stage == "FCT-3").Select(a => a.Yield).FirstOrDefault();
-                objYield.LCD_1 = dashboardyield.Where(a => a.Stage == "LCD-1").Select(a => a.Yield).FirstOrDefault();
-                objYield.LCD_2 = dashboardyield.Where(a => a.Stage == "LCD-2").Select(a => a.Yield).FirstOrDefault();
-                objYield.RF_1 = dashboardyield.Where(a => a.Stage == "RF-1").Select(a => a.Yield).FirstOrDefault();
-                objYield.RF_2 = dashboardyield.Where(a => a.Stage == "RF-2").Select(a => a.Yield).FirstOrDefault();
-                objYield.RTC = dashboardyield.Where(a => a.Stage == "RTC").Select(a => a.Yield).FirstOrDefault();
-                objYield.VOLT = dashboardyield.Where(a => a.Stage == "VOLT").Select(a => a.Yield).FirstOrDefault();
-                objYield.Honeywell_shift = dashboardHourly.shift_val;
-                objYield.Createid = "70192";
-                objYield.Updateid = "70192";
-                var resultYield = interface_DashBoard.insertHoneywelldashboard_yield_Transaction(objYield);
-            }
-            var dashboardHourlyop = interface_DashBoard.getHourlyOP(objoeeDashboard);
-            if (dashboardHourlyop.Count > 0)
-            {
-                objDashboardop.Honeywell_hour = dashboardHourlyop.Select(a => a.hour).FirstOrDefault().ToString();
-                objDashboardop.Honeywell_plan = dashboardHourlyop.Select(a => a.Target).FirstOrDefault();
-                objDashboardop.Honeywell_Actual = dashboardHourlyop.Select(a => a.LogCount).FirstOrDefault();
-                objDashboardop.Honeywell_shift = dashboardHourly.shift_val;
-                objDashboardop.Createid = "70192";
-                objDashboardop.Updateid = "70192";
-                var resulthourly = interface_DashBoard.insertHoneywelldashboard_HourlyTransaction(objDashboardop);
-            }
+            //}
+
+            //if (dashboardyield.Count > 0)
+            //{
+            //    objYield.FCT_1 = dashboardyield.Where(a => a.Stage == "FCT-1").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.FCT_2 = dashboardyield.Where(a => a.Stage == "FCT-2").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.FCT_3 = dashboardyield.Where(a => a.Stage == "FCT-3").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.LCD_1 = dashboardyield.Where(a => a.Stage == "LCD-1").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.LCD_2 = dashboardyield.Where(a => a.Stage == "LCD-2").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.RF_1 = dashboardyield.Where(a => a.Stage == "RF-1").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.RF_2 = dashboardyield.Where(a => a.Stage == "RF-2").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.RTC = dashboardyield.Where(a => a.Stage == "RTC").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.VOLT = dashboardyield.Where(a => a.Stage == "VOLT").Select(a => a.Yield).FirstOrDefault();
+            //    objYield.Honeywell_shift = dashboardHourly.shift_val;
+            //    objYield.Createid = "70192";
+            //    objYield.Updateid = "70192";
+            //    var resultYield = interface_DashBoard.insertHoneywelldashboard_yield_Transaction(objYield);
+            //}
+            //var dashboardHourlyop = interface_DashBoard.getHourlyOP(objoeeDashboard);
+            //if (dashboardHourlyop.Count > 0)
+            //{
+            //    objDashboardop.Honeywell_hour = dashboardHourlyop.Select(a => a.hour).FirstOrDefault().ToString();
+            //    objDashboardop.Honeywell_plan = dashboardHourlyop.Select(a => a.Target).FirstOrDefault();
+            //    objDashboardop.Honeywell_Actual = dashboardHourlyop.Select(a => a.LogCount).FirstOrDefault();
+            //    objDashboardop.Honeywell_shift = dashboardHourly.shift_val;
+            //    objDashboardop.Createid = "70192";
+            //    objDashboardop.Updateid = "70192";
+            //    var resulthourly = interface_DashBoard.insertHoneywelldashboard_HourlyTransaction(objDashboardop);
+            //}
             return View(obj);
         }
 
@@ -252,10 +254,24 @@ namespace Honeywell_Production_Dashboard.Controllers
         {
             // var data = new List<Dashboard_HourlyOP>
             Dashboard_HourlyOP objDashboard = new Dashboard_HourlyOP();
+            var objoeeDashboard = new Dashboard_HourlyOP();
+            var objDashboardop = new H_Dashboard_hourly_Transaction();
             objDashboard.FGName = Fgname.ToString();
-            // objDashboard.TestType = type.ToString();
-            objDashboard.TestType = string.Empty;
+            objDashboard.TestType = type.ToString();
+            var today = DateTime.Now;
+           // objDashboard.TestType = string.Empty;
             var dashboardHourly = interface_DashBoard.getHourlyOP(objDashboard);
+            //"SHIFT-A"
+            if (dashboardHourly.Count > 0)
+            {
+                objDashboardop.Honeywell_hour = dashboardHourly.Select(a => a.hour).FirstOrDefault().ToString();
+                objDashboardop.Honeywell_plan = dashboardHourly.Select(a => a.Target).FirstOrDefault();
+                objDashboardop.Honeywell_Actual = dashboardHourly.Select(a => a.LogCount).FirstOrDefault();
+                objDashboardop.Honeywell_shift = interface_DashBoard.getshift(today);
+                objDashboardop.Createid = "70192";
+                objDashboardop.Updateid = "70192";
+                var resulthourly = interface_DashBoard.insertHoneywelldashboard_HourlyTransaction(objDashboardop);
+            }
             return Json(dashboardHourly);
         }
 
@@ -264,10 +280,28 @@ namespace Honeywell_Production_Dashboard.Controllers
         {
             // var data = new List<Dashboard_HourlyOP>
             Dashboard_HourlyOP objDashboard1 = new Dashboard_HourlyOP();
+            var objYield = new H_Dashboard_yield_Transaction();
             objDashboard1.FGName = Fgname.ToString();
-            //objDashboard1.TestType = type.ToString();
-            objDashboard1.TestType = string.Empty;
+            objDashboard1.TestType = type.ToString();
+            //objDashboard1.TestType = string.Empty;
+            var ytoday = DateTime.Now;
             var dashboardyield = interface_DashBoard.getHourlyyield(objDashboard1);
+            if (dashboardyield.Count > 0)
+            {
+                objYield.FCT_1 = dashboardyield.Where(a => a.Stage == "FCT-1").Select(a => a.Yield).FirstOrDefault();
+                objYield.FCT_2 = dashboardyield.Where(a => a.Stage == "FCT-2").Select(a => a.Yield).FirstOrDefault();
+                objYield.FCT_3 = dashboardyield.Where(a => a.Stage == "FCT-3").Select(a => a.Yield).FirstOrDefault();
+                objYield.LCD_1 = dashboardyield.Where(a => a.Stage == "LCD-1").Select(a => a.Yield).FirstOrDefault();
+                objYield.LCD_2 = dashboardyield.Where(a => a.Stage == "LCD-2").Select(a => a.Yield).FirstOrDefault();
+                objYield.RF_1 = dashboardyield.Where(a => a.Stage == "RF-1").Select(a => a.Yield).FirstOrDefault();
+                objYield.RF_2 = dashboardyield.Where(a => a.Stage == "RF-2").Select(a => a.Yield).FirstOrDefault();
+                objYield.RTC = dashboardyield.Where(a => a.Stage == "RTC").Select(a => a.Yield).FirstOrDefault();
+                objYield.VOLT = dashboardyield.Where(a => a.Stage == "VOLT").Select(a => a.Yield).FirstOrDefault();
+                objYield.Honeywell_shift = interface_DashBoard.getshift(ytoday);
+                objYield.Createid = "70192";
+                objYield.Updateid = "70192";
+                var resultYield = interface_DashBoard.insertHoneywelldashboard_yield_Transaction(objYield);
+            }
             return Json(dashboardyield);
         }
 
@@ -277,8 +311,8 @@ namespace Honeywell_Production_Dashboard.Controllers
             // var data = new List<Dashboard_HourlyOP>
             Lineutilization objDashboard2 = new Lineutilization();
             objDashboard2.FGName = Fgname.ToString();
-            //objDashboard2.TestType = type.ToString();
-            objDashboard2.TestType = string.Empty;
+            objDashboard2.TestType = type.ToString();
+            //objDashboard2.TestType = string.Empty;
             var dashboardlineutil = interface_DashBoard.getlineutildata(objDashboard2);
             return Json(dashboardlineutil);
         }
@@ -290,8 +324,8 @@ namespace Honeywell_Production_Dashboard.Controllers
             // var data = new List<Dashboard_HourlyOP>
             labrlosspercentage objDashboard3 = new labrlosspercentage();
             objDashboard3.FGName = Fgname.ToString();
-            //objDashboard3.TestType = type.ToString();
-            objDashboard3.TestType = string.Empty;
+            objDashboard3.TestType = type.ToString();
+            //objDashboard3.TestType = string.Empty;
             var dashboardlablosper = interface_DashBoard.getlablosData(objDashboard3);
             return Json(dashboardlablosper);
         }

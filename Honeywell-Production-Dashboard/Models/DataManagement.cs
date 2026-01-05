@@ -171,16 +171,16 @@ namespace Honeywell_Production_Dashboard.Models
                 string shift = GetShiftLabel(DateTime.Now);
                 string proceture = string.Empty;
                 string connection = string.Empty;
-                if (dashboard_HourlyOP.FGName == "ECH3HWI00001" || dashboard_HourlyOP.FGName == "ECH1HWI00002")
-                {
+              //  if (dashboard_HourlyOP.FGName == "ECH3HWI00001" || dashboard_HourlyOP.FGName == "ECH1HWI00002")
+                //{
                     connection = Prod_ConnectionString;
                     proceture = "DIGI_DASHBOARD_HOURLY_OP_by_stage";
-                }
-                else
-                {
-                    connection = A4;
-                    proceture = "DIGI_DASHBOARD_HOURLY_OP_by_stage_H2";
-                }
+                //}
+                //else
+                //{
+                //    connection = A4;
+                //    proceture = "DIGI_DASHBOARD_HOURLY_OP_by_stage_H2";
+                //}
 
                 using (SqlConnection sqlhorly = new SqlConnection(connection))
                 {
@@ -239,16 +239,16 @@ namespace Honeywell_Production_Dashboard.Models
                 string shift = GetShiftLabel(DateTime.Now);
                 string conn = string.Empty;
                 // A4
-                if (dashboard_HourlyOP.FGName == "ECH3HWI00001" || dashboard_HourlyOP.FGName == "ECH1HWI00002")
-                {
+              //  if (dashboard_HourlyOP.FGName == "ECH3HWI00001" || dashboard_HourlyOP.FGName == "ECH1HWI00002")
+                //{
                     proc = "DIGI_DASHBOARD_YIELDBYSTAGE";
                     conn=Prod_ConnectionString;
-                }
-                else
-                {
-                    proc = "DIGI_DASHBOARD_YIELDBYSTAGE_H2";
-                    conn = A4;
-                }
+                //}
+                //else
+                //{
+                //    proc = "DIGI_DASHBOARD_YIELDBYSTAGE_H2";
+                //    conn = A4;
+                //}
                 using (SqlConnection sqlhorly = new SqlConnection(conn))
                 {
                     
@@ -434,7 +434,7 @@ namespace Honeywell_Production_Dashboard.Models
             return logindetails;
         }
 
-        string GetShiftLabel(DateTime time)
+        public string GetShiftLabel(DateTime time)
         {
             TimeSpan t = time.TimeOfDay;
 
@@ -1339,7 +1339,7 @@ namespace Honeywell_Production_Dashboard.Models
         public void writeErrorMessage(string Message, string FuncationName)
         {
             // Ensure the directory exists
-            string systemPath = "D:\\Honeywell\\Logs\"";
+            string systemPath = @"D:\\Honeywell\\Logs\\";
             if (!Directory.Exists(systemPath))
             {
                 Directory.CreateDirectory(systemPath);

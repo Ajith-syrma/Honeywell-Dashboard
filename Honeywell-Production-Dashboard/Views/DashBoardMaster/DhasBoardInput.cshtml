@@ -163,8 +163,8 @@
 </style>
 
 <!-- Header Section -->
-@* <div class="header-container">
-    <div class="header-left">
+<div class="header-container">
+   @*  <div class="header-left">
         <img src="~/images/syrmasgs.png" alt="Logo" class="header-logo" />
     </div>
     <div class="header-center">
@@ -172,28 +172,29 @@
     </div>
     <div class="header-right">
         <span id="liveClock"></span>
-    </div>
+    </div> *@
 
-</div> *@
+</div>
 
 <!-- Dashboard Section -->
 <div class="dashboard-container">
     <!-- Row 1 -->
-    <div class="chart-row" style="display:none">
-        <div class="chart-card">
+    <div class="card">
+    <div class="row" >
+        <div class="col-lg-4">
             <div class="spinner" id="spinnerPie"></div>
             <canvas id="piechart"></canvas>
         </div>
-        <div class="chart-card">
+        <div class="col-lg-4">
             <div class="spinner" id="spinnerLabLos"></div>
             <canvas id="labLosChart"></canvas>
         </div>
-        <div class="chart-card">
+        <div class="col-lg-4">
             <div class="spinner" id="spinnerLineUtil"></div>
             <canvas id="lineUtilChart"></canvas>
         </div>
     </div>
-
+    </div>
     <!-- Row 2 -->
     <div class="chart-row">
         <div class="chart-card">
@@ -219,9 +220,18 @@
 
 
 
+@* <script>
+  
+   
+</script>
+
 <script>
-    debugger;
-     const customer = @Html.Raw(JsonSerializer.Serialize(Model.Customer));
+   
+</script> *@
+
+<script>
+
+      const customer = @Html.Raw(JsonSerializer.Serialize(Model.Customer));
       const fgname = @Html.Raw(JsonSerializer.Serialize(Model.FGName));
     const type = @Html.Raw(JsonSerializer.Serialize(Model.Type));
     // Plugin to draw text in the center of the doughnut chart
@@ -242,43 +252,6 @@
             ctx.save();
         }
     };
-</script>
-
-<script>
-    function updateClock() {
-        const now = new Date();
-
-        const options = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        };
-
-        if (!fgname || !type || fgname.trim() === "" || type.trim() === "") {
-            alert("Please select both FG Name and Type before viewing the chart.");
-            window.location.href = "/DashBoardMaster/ProdcutionMaster"; 
-            return;
-        }
-
-        const toggle = document.getElementById('darkModeToggle');
-        const currentMode = localStorage.getItem('theme');
-
-
-        const formatted = now.toLocaleString('en-US', options);
-        document.getElementById('liveClock').innerText = formatted;
-    }
-
-    // Run clock immediately, then every second
-    updateClock();
-    setInterval(updateClock, 50000);
-</script>
-
-<script>
 
     const colorSet = {
         plan: '#3498db',           // Blue for Plan
@@ -295,8 +268,40 @@
     ];
  
   
-     // const fgname="ECH3ELR00001";
-      // const type ="";
+    
+
+       function updateClock() {
+        const now = new Date();
+
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        };
+
+        if (!fgname || !type || fgname.trim() === "" || type.trim() === "") {
+            alert("Please select both FG Name and Type before viewing the chart.");
+            window.location.href = "/DashBoardMaster/ProdcutionMaster";
+            return;
+        }
+
+        const toggle = document.getElementById('darkModeToggle');
+        const currentMode = localStorage.getItem('theme');
+
+
+        const formatted = now.toLocaleString('en-US', options);
+        document.getElementById('liveClock').innerText = formatted;
+    }
+
+   // //Run clock immediately, then every second
+    updateClock();
+    setInterval(updateClock, 50000);
+
 
 
     const generateColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
@@ -310,6 +315,7 @@
         // === 1. LAB LOS CHART ===
         $.get('/DashBoardMaster/GetlablosData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerLabLos').hide();
+          
             if (!data || data.length === 0) return;
 
             const value = Math.round(data[0].labr_loss ?? 0);
@@ -319,7 +325,7 @@
             const labels = data.map(d => d.hourIntervel);
             const values = data.map(d => d.labr_loss);
             const bg = labels.map(() => generateColor());
-            console.log(data);
+           // console.log(data);
 
             const ctx = document.getElementById('labLosChart').getContext('2d');
             if (window.labLosChartInstance) window.labLosChartInstance.destroy();
@@ -359,9 +365,10 @@
             });
         });
 
-        // === 2. LINE UTILIZATION CHART ===
+        // // === 2. LINE UTILIZATION CHART ===
         $.get('/DashBoardMaster/GetlineutilData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerLineUtil').hide();
+        
             if (!data || data.length === 0) return;
             const value = Math.round(data[0].line_util ?? 0);
             const remaining = 100 - value;
@@ -483,7 +490,18 @@
 
      $.get('/DashBoardMaster/GetyieldData', { Fgname: fgname, Type: type }, function (data) {
         $('#spinnerYield').hide();
-        if (!data || data.length === 0) return;
+         debugger;
+        if (!data || data.length === 0)
+        {
+             var canvas = document.getElementById("yieldChart");
+     var ctxe = canvas.getContext("2d");
+
+      ctxe.clearRect(0, 0, canvas.width, canvas.height);
+      ctxe.font = "16px Arial";
+      ctxe.textAlign = "center";
+      ctxe.fillText("Data Not Found", canvas.width / 2, canvas.height / 2);
+     return;
+        }
 
         // Extract labels and values dynamically from API data
         const labels = data.map(d => d.stage?.trim());
@@ -552,6 +570,7 @@
         // === 4. STAGE OUTPUT ===
         $.get('/DashBoardMaster/GetChartData', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerStage').hide();
+             
             if (!data) return;
 
             const totalIntervals = 8;
@@ -652,15 +671,10 @@
         });
 
 
-
-
-
-
-
-
         // === 5. PIE CHART (OEE) ===
         $.get('/DashBoardMaster/GetChartDataoee', { Fgname: fgname, Type: type }, function (data) {
             $('#spinnerPie').hide();
+          
             if (!data || data.length === 0) return;
             const labels = data.map(d => d.label);
             const values = data.map(d => d.value);
@@ -711,7 +725,7 @@
     // Initial load
     $(document).ready(function () {
         Chart.register(ChartDataLabels);
-        loadAllCharts();
+         loadAllCharts();
 
         // Auto-refresh every 10 seconds (10,000 ms)
         setInterval(loadAllCharts, 100000);
