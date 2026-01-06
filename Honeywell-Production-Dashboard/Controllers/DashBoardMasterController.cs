@@ -288,19 +288,20 @@ namespace Honeywell_Production_Dashboard.Controllers
             var dashboardyield = interface_DashBoard.getHourlyyield(objDashboard1);
             if (dashboardyield.Count > 0)
             {
-                objYield.FCT_1 = dashboardyield.Where(a => a.Stage == "FCT-1").Select(a => a.Yield).FirstOrDefault();
-                objYield.FCT_2 = dashboardyield.Where(a => a.Stage == "FCT-2").Select(a => a.Yield).FirstOrDefault();
-                objYield.FCT_3 = dashboardyield.Where(a => a.Stage == "FCT-3").Select(a => a.Yield).FirstOrDefault();
-                objYield.LCD_1 = dashboardyield.Where(a => a.Stage == "LCD-1").Select(a => a.Yield).FirstOrDefault();
-                objYield.LCD_2 = dashboardyield.Where(a => a.Stage == "LCD-2").Select(a => a.Yield).FirstOrDefault();
-                objYield.RF_1 = dashboardyield.Where(a => a.Stage == "RF-1").Select(a => a.Yield).FirstOrDefault();
-                objYield.RF_2 = dashboardyield.Where(a => a.Stage == "RF-2").Select(a => a.Yield).FirstOrDefault();
-                objYield.RTC = dashboardyield.Where(a => a.Stage == "RTC").Select(a => a.Yield).FirstOrDefault();
-                objYield.VOLT = dashboardyield.Where(a => a.Stage == "VOLT").Select(a => a.Yield).FirstOrDefault();
-                objYield.Honeywell_shift = interface_DashBoard.getshift(ytoday);
-                objYield.Createid = "70192";
-                objYield.Updateid = "70192";
-                var resultYield = interface_DashBoard.insertHoneywelldashboard_yield_Transaction(objYield);
+                //objYield.FCT_1 = dashboardyield.Where(a => a.Stage == "FCT-1").Select(a => a.Yield).FirstOrDefault();
+                //objYield.FCT_2 = dashboardyield.Where(a => a.Stage == "FCT-2").Select(a => a.Yield).FirstOrDefault();
+                //objYield.FCT_3 = dashboardyield.Where(a => a.Stage == "FCT-3").Select(a => a.Yield).FirstOrDefault();
+                //objYield.LCD_1 = dashboardyield.Where(a => a.Stage == "LCD-1").Select(a => a.Yield).FirstOrDefault();
+                //objYield.LCD_2 = dashboardyield.Where(a => a.Stage == "LCD-2").Select(a => a.Yield).FirstOrDefault();
+                //objYield.RF_1 = dashboardyield.Where(a => a.Stage == "RF-1").Select(a => a.Yield).FirstOrDefault();
+                //objYield.RF_2 = dashboardyield.Where(a => a.Stage == "RF-2").Select(a => a.Yield).FirstOrDefault();
+                //objYield.RTC = dashboardyield.Where(a => a.Stage == "RTC").Select(a => a.Yield).FirstOrDefault();
+                //objYield.VOLT = dashboardyield.Where(a => a.Stage == "VOLT").Select(a => a.Yield).FirstOrDefault();
+                //objYield.Test_Type= dashboardyield.Where(a => a.Stage == "STAGE").Select(a => a.Stage).FirstOrDefault();
+                //objYield.Honeywell_shift = interface_DashBoard.getshift(ytoday);
+                //objYield.Createid = "70192";
+                //objYield.Updateid = "70192";
+                var resultYield = interface_DashBoard.insertHoneywelldashboard_yield_Transaction(dashboardyield);
             }
             return Json(dashboardyield);
         }

@@ -30,7 +30,7 @@ namespace Honeywell_Production_Dashboard.Models
         loginmodel logindetails(loginmodel loginmodel);
         int insertHoneywellTransaction(H_Dashboard_Transaction transaction);
         string getshift(DateTime today);
-        int insertHoneywelldashboard_yield_Transaction(H_Dashboard_yield_Transaction h_Dashboard_Yield);
+        int insertHoneywelldashboard_yield_Transaction(List<Dashboard_HourlyOP> h_Dashboard_Yield);
        int insertHoneywelldashboard_HourlyTransaction(H_Dashboard_hourly_Transaction hourlyData);
     }
 }

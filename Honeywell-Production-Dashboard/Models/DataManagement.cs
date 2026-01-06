@@ -537,27 +537,36 @@ namespace Honeywell_Production_Dashboard.Models
 
         }
 
-        public int insertHoneywelldashboard_yield_Transaction(H_Dashboard_yield_Transaction yielddata)
+        public int insertHoneywelldashboard_yield_Transaction(List<Dashboard_HourlyOP> yielddata)
         {
             int yTransResult = 0;
+            SqlConnection sqltranscon = null;
             try
             {
-                using (SqlConnection sqltranscon = new SqlConnection(ConnectionString))
+                var sift = GetShiftLabel(DateTime.Now);
+                using ( sqltranscon = new SqlConnection(ConnectionString))
                 {
                     using (SqlCommand sqlcmdtrans = new SqlCommand("pro_insertHoneywelldashboard_yield_Transaction", sqltranscon))
                     {
                         sqlcmdtrans.CommandType = CommandType.StoredProcedure;
-                        sqlcmdtrans.Parameters.AddWithValue("@FCT_1", yielddata.FCT_1);
-                        sqlcmdtrans.Parameters.AddWithValue("@FCT_2", yielddata.FCT_2);
-                        sqlcmdtrans.Parameters.AddWithValue("@RF_1", yielddata.RF_1);
-                        sqlcmdtrans.Parameters.AddWithValue("@RF_2",yielddata.RF_2);
-                        sqlcmdtrans.Parameters.AddWithValue("@RTC", yielddata.RTC);
-                        sqlcmdtrans.Parameters.AddWithValue("@VOLT",yielddata.VOLT);
-                        sqlcmdtrans.Parameters.AddWithValue("@Honeywell_shift", yielddata.Honeywell_shift);
-                        sqlcmdtrans.Parameters.AddWithValue("@Createid", yielddata.Createid.ToString());
-                        sqlcmdtrans.Parameters.AddWithValue("@Updateid", yielddata.Updateid.ToString());
                         sqltranscon.Open();
-                        yTransResult = sqlcmdtrans.ExecuteNonQuery();
+                        foreach (var item in yielddata)
+                        {
+                            sqlcmdtrans.Parameters.Clear();
+                            //sqlcmdtrans.Parameters.AddWithValue("@FCT_1", yielddata.FCT_1);
+                            //sqlcmdtrans.Parameters.AddWithValue("@FCT_2", yielddata.FCT_2);
+                            //sqlcmdtrans.Parameters.AddWithValue("@RF_1", yielddata.RF_1);
+                            //sqlcmdtrans.Parameters.AddWithValue("@RF_2",yielddata.RF_2);
+                            //sqlcmdtrans.Parameters.AddWithValue("@RTC", yielddata.RTC);
+                            //sqlcmdtrans.Parameters.AddWithValue("@VOLT",yielddata.VOLT);
+                            sqlcmdtrans.Parameters.AddWithValue("@Test_Type", item.Stage);
+                            sqlcmdtrans.Parameters.AddWithValue("@Honeywell_shift", sift);
+                            sqlcmdtrans.Parameters.AddWithValue("@Createid", "70192");
+                            sqlcmdtrans.Parameters.AddWithValue("@Updateid", "70192");
+                            
+                            yTransResult = sqlcmdtrans.ExecuteNonQuery();
+                          
+                        }
                         sqltranscon.Close();
                         return yTransResult;
 
@@ -567,7 +576,8 @@ namespace Honeywell_Production_Dashboard.Models
             catch (Exception ex)
             {
                 writeErrorMessage(ex.Message.ToString(), "insertHoneywelldashboard_yield_Transaction");
-                return yTransResult;
+                sqltranscon.Close();
+                return 0;
             }
         }
 

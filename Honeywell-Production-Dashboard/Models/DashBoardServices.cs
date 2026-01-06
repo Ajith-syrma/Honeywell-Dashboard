@@ -112,7 +112,7 @@ namespace Honeywell_Production_Dashboard.Models
             var shift = dataManagement.GetShiftLabel(today);
             return shift;
         }
-        public int insertHoneywelldashboard_yield_Transaction(H_Dashboard_yield_Transaction h_Dashboard_Yield)
+        public int insertHoneywelldashboard_yield_Transaction(List<Dashboard_HourlyOP> h_Dashboard_Yield)
         {
             var resultYield = dataManagement.insertHoneywelldashboard_yield_Transaction(h_Dashboard_Yield);
             return resultYield;
